@@ -1,146 +1,98 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  SafeAreaView,
-  View,
   StyleSheet,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  BackHandler,
   Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  SafeAreaView,
+  Dimensions,
+  BackHandler,
 } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Actions} from 'react-native-router-flux';
-import { Searchbar } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Searchbar } from 'react-native-paper';
+import RoomItem from './Item';
+export default function ORoomMangage ({navigation}) {
+  const [data, setData] = useState([]);
+  const [visible, setVisible] = useState(true);
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
 
-import RoomItem from './Component/RoomItem.js'
+  const fetchData = async () => {
+    const resp = await fetch("https://api.sampleapis.com/coffee/hot");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
 
-const RoomStack = createStackNavigator();
-
-const ORoomMangage = props => {
-    const [filterdata, setFilterNewData] = useState([]);
-    const [searchQuery, setSearchQuery] = React.useState('');
-
-    const [datalist, setDatalist] = useState([]);
-
-    const user = auth().currentUser;
-    let temp_data = [];
-
-    const onChangeSearch = query => {
-      setSearchQuery(query);
-      if(query) {
-        const newData = datalist.filter(item => {
-          const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase()
-          const textData = query.toUpperCase();
-          return itemData.indexOf(TextData) > -1;
-        })
-        setFilterNewData(newData);
-      }
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = data.filter((item) => {
+        //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
+        const itemData = item.title? item.title.toUpperCase() : ''.toUpperCase();
+        const textData = query.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);
+      console.log('newData',filterdata);
+      
+    }
+    else{
       setFilterNewData(data);
     }
+    
+  };
 
-    const goBack = () => {
-      Actions.pop();
-    };
+  const renderRoomItem = ({ item }) => <RoomItem item={item} navigation={navigation}/>;
+  const [modalVisible, setModalVisible] = useState(false);
 
-    const fetch = async () =>{
-      try {
-          let response = await fetch('link/'+ user.uid+ '/room');
-          let json = await response.json();
-          setDatalist(json.data);
-        } catch (error) {
-          console.error(error);
-        }
-    }
-    useEffect(() => {
-      const backAction = () => {
-        Actions.pop();
-        return true;
-      };
-      const backHandler = BackHandler.addEventListener(
-        'hardwareBackPress',
-        backAction,
-      );
-      return () => backHandler.remove();
-    }, []);
-
-    useEffect(() => {
-      fetch();
-      // return () => ''
-    },[]);
-  
-    const renderRoomItem = ({item}) => <RoomItem item={item} />;
-    const [modalVisible, setModalVisible] = useState(false);
-
-    return(
-      <SafeAreaView style = {styles.roomlistscreen}>
-        <LinearGradient
-          colors={['#F6E8C3', '#D8BBE2']}
-          style= {styles.linear}
-        />
-        {/* <RoomStack.Navigator
-          screenOptions={{
-            headerLeft: (props) => (
-              <HeaderBackButton {...props} onPress={navigation.goBack} />
-            ),
-            headerRight: (props) => (
-              <HeaderBackButton {...props} onPress={navigation.goBack} />
-            ),
-          }}
-        /> */}
+  return (
+    <SafeAreaView style={styles.roomlistscreen}>
         <Searchbar style= {styles.searchbar}
         placeholder="Search"
         onChangeText={onChangeSearch}
         value={searchQuery}
         />
-        <View style={styles.container}>
-        {datalist.length == 0 ? (
+      <View style={styles.container}>
+        {data.length === 0 ? (
           <View>
-            <Text style={{color: 'orange'}}>Chưa có phòng trọ</Text>
+            <Text style={{ color: 'orange' }}>Chưa có phòng trọ</Text>
           </View>
         ) : (
           <FlatList
-            data={datalist}
+            data={filterdata}
             renderItem={renderRoomItem}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id.toString()}
           />
         )}
       </View>
-      </SafeAreaView>
-    )
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   roomlistscreen: {
     flex: 1,
+    flexDirection: 'column',
   },
-  linear:{
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: "100%",
-  },
-  header: {
-    height: 65,
-    backgroundColor: 'rgba(47,128,237,0.75)',
-    flexDirection: 'row',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  searchbar: {
-    backgroundColor: '#FFFFFF',
+  searchbar:{
+    width: '90%',
+    borderRadius: 5,
+    height: 40,
+    marginLeft: '6%',
+    paddingVertical: 10,
     marginVertical: 10,
-    marginLeft: 15,
-    paddingLeft: 25,
-    width: '75%',
-    borderRadius: 17,
-    fontSize: 15,
-  },
-
-  container: {
-    height: Dimensions.get('window').height - 65,
-  },
+     shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  }
 });

@@ -1,37 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {Router, Scene} from 'react-native-router-flux';
-
-import RoomManageO from './App/OwnerScreens/RoomManage.js'
-import RoomDetailO from './App/OwnerScreens/RoomDetailO'
-
+import * as React from 'react';
+import { NavigationContainer} from '@react-navigation/native';
+import {
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import RootStack from './root';
+import { LinearGradient } from 'expo-linear-gradient';
 export default function App() {
   return (
-    <Router>
-      <Scene key='root'>
-        <Scene
-          key = 'roomManageO'
-          component = {RoomManageO}
-          title = "Manage"
-          hideNavBar = {true}
-        />
-        <Scene
-          key = 'roomDetailO'
-          component = {RoomDetailO}
-          title = "RoomDetailOwner"
-          hideNavBar = {true}
-        />
-      </Scene>
-    </Router>
+    <>
+    <LinearGradient colors={['#F6E8C3', '#D8BBE2']} style={styles.linear} />
+    <NavigationContainer>
+      <RootStack/>
+    </NavigationContainer>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    linear: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: Dimensions.get('window').height,
   },
 });

@@ -3,26 +3,19 @@ import {
 	StyleSheet,
 	Text,
 	View,
-	Image,
 	TouchableOpacity,
-	Dimensions,
-
+  Image
 } from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { Actions } from 'react-native-router-flux';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const RoomDetailO = ({item}) => { 
+const RoomDetailO = ({navigation}) => {
   const [focus, setFocus] = useState(true);
   const OnChangeTab = (newfocus) => {
     setFocus(newfocus);
   }
 
   return(
-      <View style={styles.roomlistscreen}>
-      <LinearGradient
-          colors={['#F6E8C3', '#D8BBE2']}
-          style={styles.linear}/>
+    <View style={styles.roomlistscreen}>
     <View style={styles.roominfo}>
       <Image style={styles.ImgHome} source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3Fh_04jzrGJwzp1rvJBtG8h71t0TZKZXnvA&usqp=CAU'}}/>
     </View>
@@ -106,13 +99,6 @@ const styles = StyleSheet.create({
       height:200,
       paddingTop: 15,
       borderRadius: 15
-    },
-    linear:{
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 0,
-      height: "100%",
     },
     header: {
       height: 40,
@@ -246,3 +232,5 @@ const styles = StyleSheet.create({
     marginRight: 10,
   }
   });
+
+  export default RoomDetailO;

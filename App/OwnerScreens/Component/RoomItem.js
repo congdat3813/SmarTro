@@ -5,44 +5,46 @@ import {
 	View,
 	Image,
 	TouchableOpacity,
-	Dimensions,
 
 } from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { Actions } from 'react-native-router-flux';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import RoomDetailO from '../roomDetailO.js'
+import {
+    createStackNavigator,
+  } from '@react-navigation/stack';
 
-const RoomItem = ({item}) => {  
+
+const RoomItem = ({navigation, item}) => {  
     const gotoRoomDetail = () =>{
-        Actions.roomDetailO(item)
+        console.log('a');
+        navigation.navigate('RoomDetailO');
+        console.log('a',item)
     }
     
     return(
-        <View style={styles.RoomItem}>
-            <TouchableOpacity
+        <View>
+            <TouchableOpacity 
                 onPress={() => gotoRoomDetail()}
-                style = {styles.itemImg}>
-                <Image
-                    style={{ width: '100%', height: '100%' }}
-                    source={require('../assets/red.png')} />
-                <FontAwesome5 style={{ position: 'absolute' }} name='times-circle' size={18} color='white' solid />
-            </TouchableOpacity>
+                style={styles.RoomItem}>
+              <View style = {styles.RoomItemImg}>
+              <Image
+                  style={styles.Img}
+                  source={{uri: item.image}} />
+              </View>
             <View style = {styles.RoomItemText}>
-                <Text style ={styles.textContain}>
-                    {item.name}
+                <Text style ={styles.textTitle}>
+                    {item.title}
                 </Text>
                 <Text style ={styles.textContain}>
-                    Giá phòng: {item.name} đ
+                    Giá phòng: {item.title} đ
                 </Text>
                 <Text style ={styles.textContain}>
-                    Khách thuê: {item.num}/{item.num}
+                    Khách thuê: {item.title}/{item.title}
                 </Text>
                 <Text style ={styles.textContain}>
-                    Thuê từ: {item.time}
+                    Thuê từ: {item.title}
                 </Text>
             </View>
+            </TouchableOpacity>
         </View>
         )
 }
@@ -51,44 +53,52 @@ const styles = StyleSheet.create({
     RoomItem: {
 		display: 'flex',
 		flexDirection: 'row',
-		backgroundColor: '#eeeeee',
+		backgroundColor: '#FFFFFF',
 		paddingVertical: 10,
 		paddingHorizontal: 10,
-		justifyContent: 'space-between',
-		width: '88%',
+		justifyContent: 'flex-start',
+		width: '90%',
 		marginLeft: '6%',
-		borderRadius: 10,
-		marginBottom: 10
-	},
-    itemImg: {
-        width: 70,
-		height: 70,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center'
+		borderRadius: 15,
+		marginBottom: 10,
+     shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+	},
     RoomItemText: {
 		display: 'flex',
 		flexDirection: 'column',
-		backgroundColor: '#eeeeee',
-		paddingVertical: 10,
-		paddingHorizontal: 10,
-		justifyContent: 'space-between',
-		height: '120',
+    justifyContent: 'center',
 		marginBottom: 10,
-        marginTop: 10
+    marginLeft: 10,
+		paddingHorizontal: 10,
 	},
     textTitle: {
 		width: '90%',
 		fontSize: 20,
-        color: '#660B8E',
+    color: '#660B8E',
+    fontWeight: 'bold'
 	},
     textContain: {
-		width: '90%',
 		fontSize: 15,
         color: '660B8E'
 	},
-
+  RoomItemImg: {
+		display: 'flex',
+		flexDirection: 'column',
+    justifyContent: 'center',
+	},
+  Img:{
+    height:70,
+    width: 70,
+    borderRadius:15,
+    paddingVertical: 10
+  },
 })
 
+export default RoomItem;
 
