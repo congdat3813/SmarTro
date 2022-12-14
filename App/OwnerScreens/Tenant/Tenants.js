@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -41,6 +41,32 @@ const DATA1 = [
 ];
 
 const Tenants = ({ navigation }) => {
+
+  const [data, setData] = useState([]);
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = data.filter((item) => {
+        //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);
+      console.log('newData',filterdata);
+      
+    }
+    else{
+      setFilterNewData(data);
+    }
+  };
+  useEffect(() => {
+    setData(DATA1);
+    setFilterNewData(DATA1);
+  }, []);
+
   const Tenant = ({ item }) => {
     return (
       <Pressable
@@ -116,22 +142,16 @@ const renderTenant = ({ item }) => {
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'center'}}>
         
-                <TextInput
+        <TextInput
         style={styles.input}
-        // onChangeText={onChangeText}
-        value=""
-      ></TextInput>
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+        ></TextInput>
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
-      </View>
+        </View>
 
 <FlatList
-          data={DATA1}
+          data={filterdata}
           renderItem={renderTenant}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -331,7 +351,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: "90%",
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {

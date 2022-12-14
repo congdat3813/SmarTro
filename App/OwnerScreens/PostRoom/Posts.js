@@ -9,7 +9,7 @@ import {
   TextInput,
   ProgressViewIOSBase
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
@@ -57,8 +57,49 @@ const DATA2 = [
 ];
 
 const Posts = ({ navigation }) => {
+
   const [status, setStatus] = useState("Đã đăng");
   const [posts, setPosts] = useState(DATA1);
+
+  const [data, setData] = useState([]);
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = data.filter((item) => {
+        const itemData = item.title.toString() ? item.title.toString().toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);      
+    }
+    else{
+      setFilterNewData(data);
+    }
+  };
+
+  const onChangeSearch2 = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = data.filter((item) => {
+        //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
+        const itemData = item.room.toString() ? item.room.toString().toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);
+      console.log('newData',filterdata);
+      
+    }
+    else{
+      setFilterNewData(data);
+    }
+  };
+  useEffect(() => {
+    setData(DATA1);
+    setFilterNewData(DATA1);
+  }, []);
   const Post1 = ({ item }) => {
     return (
       <Pressable
@@ -180,21 +221,9 @@ const Posts = ({ navigation }) => {
         
                 <TextInput
         style={styles.input}
-        // onChangeText={onChangeText}
-        value=""
+        onChangeText={status == "Đã đăng"? onChangeSearch: onChangeSearch2}
+        value={{searchQuery}}
       ></TextInput>
-      <Pressable
-      onPress={() => 
-        navigation.navigate('Home')
-      }
-      >
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
-      </Pressable>
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
@@ -202,7 +231,8 @@ const Posts = ({ navigation }) => {
       <Pressable
   onPress={() => {
     setStatus("Đã đăng");
-    setPosts(DATA1);
+    setData(DATA1);
+    setFilterNewData(DATA1);
   }}
   style={(status == "Đã đăng")? styles.violetButton : styles.violetButtonOutline}>
   <Text style={(status == "Đã đăng")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#660B8E", fontSize: 15, fontWeight: 'bold'}}>Đã đăng</Text>
@@ -210,20 +240,19 @@ const Posts = ({ navigation }) => {
 <Pressable
   onPress={() => {
     setStatus("Chưa đăng");
-    setPosts(DATA2);
+    setData(DATA2);
+    setFilterNewData(DATA2);
   }}
   style={(status == "Chưa đăng")? styles.yellowButton : styles.yellowButtonOutline}>
   <Text style={(status == "Chưa đăng")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa đăng</Text>
 </Pressable>
 </View>
-
         <FlatList
-          data={posts}
+          data={filterdata}
           renderItem={status == "Đã đăng"? renderPost1 : renderPost2}
           keyExtractor={(item) => item.id}
           style={styles.list}
         />   
-
         </View>
       </LinearGradient>
     </View>
@@ -406,7 +435,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: '90%',
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {

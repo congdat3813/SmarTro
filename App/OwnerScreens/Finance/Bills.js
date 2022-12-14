@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -40,6 +40,31 @@ const DATA1 = [
 const Bills = ({ navigation }) => {
   const [status, setStatus] = useState("Chưa thanh toán");
   const [statusColor, setStatusColor] = useState("#F2BF00");
+
+  const [data, setData] = useState([]);
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = data.filter((item) => {
+        //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
+        const itemData = item.id ? item.id.toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);
+      console.log('newData',filterdata);
+      
+    }
+    else{
+      setFilterNewData(data);
+    }
+  };
+  useEffect(() => {
+    setData(DATA1.filter(item => item.status == status));
+    setFilterNewData(DATA1.filter(item => item.status == status));
+  }, []);
   const Bill = ({ item }) => (
     <Pressable
     onPress={() =>
@@ -116,19 +141,13 @@ const renderBill = ({ item }) => {
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'center'}}>
         
-                <TextInput
+        <TextInput
         style={styles.input}
-        // onChangeText={onChangeText}
-        value=""
-      ></TextInput>
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
+        onChangeText={onChangeSearch}
+        value={searchQuery}
+        ></TextInput>
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
-      </View>
+        </View>
 
       <View style={styles.buttons}>
 
@@ -136,6 +155,8 @@ const renderBill = ({ item }) => {
   onPress={() => {
     setStatus("Chưa thanh toán");
     setStatusColor("#F2BF00");
+    setData(DATA1.filter(item => item.status == "Chưa thanh toán"));
+    setFilterNewData(DATA1.filter(item => item.status == "Chưa thanh toán"));
   }}
   style={(status == "Chưa thanh toán")? styles.yellowButton : styles.yellowButtonOutline}>
   <Text style={(status == "Chưa thanh toán")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa thanh toán</Text>
@@ -144,6 +165,9 @@ const renderBill = ({ item }) => {
   onPress={() => {
     setStatus("Đã thanh toán");
     setStatusColor("#071D92");
+    setData(DATA1.filter(item => item.status == "Đã thanh toán"));
+    setFilterNewData(DATA1.filter(item => item.status == "Đã thanh toán"));
+    console.log(filterdata);
   }}
   style={(status == "Đã thanh toán")? styles.blueButton : styles.blueButtonOutline}>
   <Text style={(status == "Đã thanh toán")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đã thanh toán</Text>
@@ -152,6 +176,8 @@ const renderBill = ({ item }) => {
   onPress={() => {
     setStatus("Trễ hạn");
     setStatusColor("#BD0000");
+    setData(DATA1.filter(item => item.status == "Trễ hạn"));
+    setFilterNewData(DATA1.filter(item => item.status == "Trễ hạn"));
   }}
   style={(status == "Trễ hạn")? styles.redButton : styles.redButtonOutline}>
   <Text style={(status == "Trễ hạn")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#BD0000", fontSize: 15, fontWeight: 'bold'}}>Trễ hạn</Text>
@@ -185,7 +211,7 @@ const renderBill = ({ item }) => {
 </View> */}
 
 <FlatList
-          data={DATA1.filter(item => item.status == status)}
+          data={filterdata}
           renderItem={renderBill}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -385,7 +411,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: '90%',
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {
