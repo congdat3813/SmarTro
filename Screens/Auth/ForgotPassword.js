@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable, Modal, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable, Modal, Alert, Dimensions } from 'react-native';
 import React, {useState} from 'react';
 import { Link } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import usePasswordVisibility from '../../hooks/usePasswordVisibility';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Register({navigation}) {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = usePasswordVisibility();
@@ -11,6 +12,10 @@ export default function Register({navigation}) {
     const [actionTriggered, setActionTriggered] = useState('');
     return (
         <View style={styles.container}>
+            <LinearGradient
+            colors={["#F6E8C3", "#D8BBE2"]}
+            style={styles.linear}
+            />
             <Image 
                 style={styles.logo}
                 source={require('../../assets/images/Logo.png')}
@@ -265,5 +270,12 @@ const styles = StyleSheet.create({
   },
   roundStyleHighLighted: {
     borderColor: "#660B8E",
+  },
+  linear: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: Dimensions.get('window').height,
   },
 });

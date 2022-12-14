@@ -1,20 +1,30 @@
-import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable, Modal, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable, Modal, Alert, TouchableOpacity, Dimensions, ScrollView} from 'react-native';
 import React, {useState} from 'react';
 import { Link } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import usePasswordVisibility from '../../hooks/usePasswordVisibility';
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Register({navigation}) {
     const { passwordVisibility, rightIcon, handlePasswordVisibility } = usePasswordVisibility();
     const [modalVisible, setModalVisible] = useState(true);
     const [actionTriggered, setActionTriggered] = useState('');
+    const [focus, setFocus] = useState(true);
+    const OnChoose = (newfocus) => {
+      setFocus(newfocus);
+    }
     return (
         <View style={styles.container}>
+            <LinearGradient
+            colors={["#F6E8C3", "#D8BBE2"]}
+            style={styles.linear}
+            />
             <Image 
                 style={styles.logo}
                 source={require('../../assets/images/Logo.png')}
             />
             <Text style={styles.text}>Đăng ký</Text>
+            <ScrollView>
             <View style={{marginTop: 320}}>
               <Text style={styles.text1}>Tên đăng nhập</Text>
               <TextInput
@@ -77,9 +87,12 @@ export default function Register({navigation}) {
                 </Pressable>
               </View>
             </View>
+            </ScrollView>
+            <View style={{marginBottom: 10}}>
             <Pressable style={styles.button} onPress={() => {setActionTriggered('ACTION_2'); setModalVisible(true);}}>
               <Text style={styles.textBut}>Đăng ký</Text>
             </Pressable>
+            </View>
             <Modal
                 animationType="slide"
                 presentationStyle="overFullScreen"
@@ -95,14 +108,22 @@ export default function Register({navigation}) {
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Chọn vai trò</Text>
                         <View style={styles.role}>
+                        <TouchableOpacity onPress={() => OnChoose(true)}
+                          style = {focus ? styles.Oactive: styles.OUnactive}
+                        >
                           <View style={styles.selectRole}>
                             <MaterialCommunityIcons name={'account-edit'} size={70} color='#232323' />
                             <Text style={styles.textRole}>Chủ trọ</Text>
                           </View>
+                          </TouchableOpacity>
+                          <TouchableOpacity onPress={() => OnChoose(false)}
+                            style = {!focus ? styles.Oactive: styles.OUnactive}
+                          >                          
                           <View style={styles.selectRole}>
                             <MaterialCommunityIcons name={'account-search'} size={70} color='#232323' />
                             <Text style={styles.textRole}>Khách thuê</Text>
                           </View>
+                          </TouchableOpacity>
                         </View>
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
@@ -117,10 +138,17 @@ export default function Register({navigation}) {
                     <View style={styles.modalView}>
                       <Text style={styles.modalText}>Chúc mừng bạn đã đăng kí thành công</Text>
                         <View style={styles.role}>
-                          <View style={styles.selectRole}>
-                            <MaterialCommunityIcons name={'account-search'} size={70} color='#232323' />
-                            <Text style={styles.textRole}>Khách thuê</Text>
-                          </View>
+                          {
+                            !focus?
+                            <View style={styles.selectRole}>
+                              <MaterialCommunityIcons name={'account-search'} size={70} color='#232323' />
+                              <Text style={styles.textRole}>Khách thuê</Text>
+                            </View>:
+                            <View style={styles.selectRole}>
+                              <MaterialCommunityIcons name={'account-edit'} size={70} color='#232323' />
+                              <Text style={styles.textRole}>Chủ Trọ</Text>
+                            </View>
+                          }
                         </View>
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
@@ -139,7 +167,6 @@ export default function Register({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'linear-gradient(red)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -174,7 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -187,11 +214,8 @@ const styles = StyleSheet.create({
   button: {
     width: 345,
     height: 50,
-    top: 90,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
     backgroundColor: '#660B8E',
@@ -272,5 +296,29 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     letterSpacing: 0.25,
     color: 'white',
+  },
+  Oactive: {
+    backgroundColor:'#D9D9D9',
+    borderRadius: 15,
+    borderWidth: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+  },
+  OUnactive: {
+    backgroundColor:'#FFFFFF',
+    borderRadius: 15,
+    borderColor:'#FFFFFF',
+  },
+  linear: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: Dimensions.get('window').height,
   },
 });

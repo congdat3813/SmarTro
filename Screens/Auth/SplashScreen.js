@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 // import AsyncStorage from '@react-native-community/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
+
 
 const SplashScreen = () => {
   // const [animating, setAnimating] = useState(true);
@@ -19,7 +19,7 @@ const SplashScreen = () => {
   return (
     <LinearGradient
         colors={["#F6E8C3", "#D8BBE2"]}
-        style={styles.linearGradient}
+        style={styles.linear}
       >
       <View style={styles.container}>
         <Image 
@@ -63,5 +63,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight: 30,
     color: '#1A1A1A',
+  },
+  linear: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: Dimensions.get('window').height,
   },
 });
