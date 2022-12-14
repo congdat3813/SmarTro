@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable, Dimensions } from 'react-native';
 import React, {useState} from 'react';
 import usePasswordVisibility from '../../hooks/usePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import { Link } from '@react-navigation/native';
 import {
   useFonts,
   BeVietnam_700Bold,
 } from '@expo-google-fonts/be-vietnam';
 
-export default function Login({naivigation}) {
+export default function Login({navigation}) {
   const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -71,6 +71,10 @@ export default function Login({naivigation}) {
   return (
     // <LinearGradient colors={["#F6E8C3", "#D8BBE2"]} style={styles.linearGradient}>
       <View style={styles.container}>
+        <LinearGradient
+        colors={["#F6E8C3", "#D8BBE2"]}
+        style={styles.linear}
+        />
         <Image 
           style={styles.logo}
           source={require('../../assets/images/Logo.png')}
@@ -135,15 +139,8 @@ export default function Login({naivigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'pink',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  linearGradient: {
-    flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5
   },
   logo: {
     position: 'absolute',
@@ -224,5 +221,18 @@ const styles = StyleSheet.create({
   register: {
     top: 120,  
     flexDirection: 'row',
+  },
+  linearGradient: {
+    // alignItems: "center",
+    // justifyContent: "center",
+    height: "100%",
+    width: 400,
+  },
+  linear: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: Dimensions.get('window').height,
   },
 });
