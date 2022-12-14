@@ -3,47 +3,55 @@ import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const DATA1 = [
   {
     id: "1",
-    title: " Quản lý \n   phòng",
+    title: "Phòng của tôi",
     icon: "door-open",
     color: "#660B8E",
-    name: "Rooms",
+    name: "Room",
   },
   {
     id: "2",
-    title: "    Quản lý \n khách thuê",
-    icon: "user-friends",
-    color: "#F2BF00",
-    name: "Tenants",
+    title: "Hóa đơn",
+    icon: "money-bill-wave",
+    color: "#0BA108",
+    name: "Bills",
   },
   {
     id: "3",
-    title: " Quản lý \n tài chính",
-    icon: "dollar-sign",
-    color: "#0BA108",
-    name: "Finance",
-  },
+    title: "Dịch vụ",
+    icon: "cogs",
+    color: "#071D92",
+    name: "Services",
+  }
 ];
 
 const DATA2 = [
   {
     id: "4",
-    title: " Quản lý \n  dịch vụ",
-    icon: "cogs",
-    color: "#071D92",
-    name: "Services",
-  },
-  {
-    id: "5",
-    title: " Quản lý \n   sự cố",
+    title: "Sự cố",
     icon: "exclamation-triangle",
     color: "#BD0000",
     name: "Troubles",
+  },
+  {
+    id: "5",
+    title: "Phòng đã lưu",
+    icon: "bookmark",
+    color: "#F2BF00",
+    name: "Tenant",
+  },
+  {
+    id: "6",
+    title: "    Quản lý \n khách thuê",
+    icon: "user-friends",
+    color: "#F2BF00",
+    name: "ProfileInfo",
   },
 ];
 
@@ -53,9 +61,9 @@ const Home = ({ navigation }) => {
       onPress={() => 
         navigation.navigate(item.name)
       }
-      style={() => [
+      style={({ pressed }) => [
         {
-          backgroundColor: "white",
+          backgroundColor: pressed ? "#F3E8FF" : "white",
           alignItems: "center",
           justifyContent: "center",
           width: 110,
@@ -68,7 +76,6 @@ const Home = ({ navigation }) => {
           shadowOpacity: 0.2,
           shadowRadius: 6,
         },
-        styles.wrapperCustom,
       ]}
     >
       <FontAwesome5 name={item.icon} size={45} color={item.color} />
@@ -111,9 +118,9 @@ const Home = ({ navigation }) => {
     onPress={() => {
       navigation.navigate('Posts')
     }}
-    style={() => [
+    style={({ pressed }) => [
       {
-        backgroundColor: "white",
+        backgroundColor: pressed ? "#F3E8FF" : "white",
         alignItems: "center",
         justifyContent: "center",
         width: 110,
@@ -128,11 +135,10 @@ const Home = ({ navigation }) => {
         marginLeft: 5,
         marginBottom: 15
       },
-      styles.wrapperCustom,
     ]}
   >
-    <FontAwesome5 name="upload" size={45} color="#F08672" />
-    <Text style={styles.item}>Đăng phòng</Text>
+    <FontAwesome5 name="search" size={45} color="#F08672" />
+    <Text style={styles.item}>Tìm phòng</Text>
   </Pressable>
         
         <Text style={styles.header}>Quản lý</Text>
@@ -215,9 +221,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-  },
-  wrapperCustom: {
-    padding: 6,
   },
   item: {
     fontSize: 12,

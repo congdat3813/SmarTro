@@ -1,53 +1,53 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import DropDownPicker from "react-native-dropdown-picker";
+import {useForm, Controller} from 'react-hook-form';
+
+const rooms = [
+  { label: "101", value: "101" },
+  { label: "102", value: "102" },
+  { label: "103", value: "103" },
+  { label: "201", value: "201" },
+  { label: "202", value: "202" },
+  { label: "203", value: "203" },
+];
 
 const DATA1 = [
   {
     id: "1",
-    title: " Quản lý \n   phòng",
-    icon: "door-open",
-    color: "#660B8E",
-    name: "Rooms",
+    title: "Bảo vệ",
+    icon: "user-shield",
+    color: "#071D92",
+    name: "Room",
   },
   {
     id: "2",
-    title: "    Quản lý \n khách thuê",
-    icon: "user-friends",
-    color: "#F2BF00",
-    name: "Tenants",
+    title: "Wifi",
+    icon: "wifi",
+    color: "#071D92",
+    name: "Tenant",
   },
   {
     id: "3",
-    title: " Quản lý \n tài chính",
-    icon: "dollar-sign",
-    color: "#0BA108",
+    title: "Rác",
+    icon: "trash",
+    color: "#071D92",
     name: "Finance",
   },
 ];
 
-const DATA2 = [
-  {
-    id: "4",
-    title: " Quản lý \n  dịch vụ",
-    icon: "cogs",
-    color: "#071D92",
-    name: "Services",
-  },
-  {
-    id: "5",
-    title: " Quản lý \n   sự cố",
-    icon: "exclamation-triangle",
-    color: "#BD0000",
-    name: "Troubles",
-  },
-];
-
-const Home = ({ navigation }) => {
+const Services = ({ navigation }) => {
+  const { handleSubmit, control } = useForm();
+  const [roomOpen, setRoomOpen] = useState(false);
+  const [roomValue, setRoomValue] = useState(null);
+  const [room, setRoom] = useState(rooms);
+  const onRoomOpen = useCallback(() => {
+  }, []);
   const Item = ({ item }) => (
     <Pressable
       onPress={() => 
@@ -68,7 +68,6 @@ const Home = ({ navigation }) => {
           shadowOpacity: 0.2,
           shadowRadius: 6,
         },
-        styles.wrapperCustom,
       ]}
     >
       <FontAwesome5 name={item.icon} size={45} color={item.color} />
@@ -90,65 +89,57 @@ const Home = ({ navigation }) => {
         colors={["#F6E8C3", "#D8BBE2"]}
         style={styles.linearGradient}
       >
-                <View style={styles.headerBar}>
+        <View style={styles.headerBar}>
           <View style={styles.headerBarTitle}>
-          <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
+          <Pressable
+      onPress={() => 
+        navigation.navigate('Home')
+      }
+    >
+      <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
+    </Pressable> 
+    <Pressable
+      onPress={() => 
+        navigation.navigate('AddService')
+      }
+    >
+<FontAwesome5 name='plus-circle' size={30} color='#071D92' style={{marginRight: 15}}/>
+</Pressable>    
+          
           </View>
-          <View style={{flexDirection: 'row', position: 'absolute', alignSelf: 'center', top: 42, marginBottom: 10, alignItems: 'center'}}>
-          <Image
-        style={styles.smallImage}
-        source={require('../../assets/logo.png')}
-      />  
-          <Text style={styles.headerText}>TinTro</Text>
-          </View>
+          <Text style={styles.headerText}>Dịch vụ</Text>
         </View>
         
         <View style={styles.body}>
-        <Text style={styles.header}>Nhắc nhở</Text>
-        <Text style={styles.header}>Khởi tạo</Text>
-
-        <Pressable
-    onPress={() => {
-      navigation.navigate('Posts')
-    }}
-    style={() => [
-      {
-        backgroundColor: "white",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 110,
-        height: 110,
-        borderRadius: 16,
-        shadowOffset: {
-          width: 9,
-          height: 9,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 6,
-        marginLeft: 5,
-        marginBottom: 15
-      },
-      styles.wrapperCustom,
-    ]}
-  >
-    <FontAwesome5 name="upload" size={45} color="#F08672" />
-    <Text style={styles.item}>Đăng phòng</Text>
-  </Pressable>
         
-        <Text style={styles.header}>Quản lý</Text>
+        <Text style={styles.header}>Xem dịch vụ</Text>
+        <Controller
+        name="room"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <View style={styles.dropdownRoom}>
+            <DropDownPicker
+              style={styles.dropdown}
+              open={roomOpen}
+              value={roomValue} //roomValue
+              items={room}
+              setOpen={setRoomOpen}
+              setValue={setRoomValue}
+              setItems={setRoom}
+              placeholder="Chọn phòng"
+              placeholderStyle={styles.placeholderStyles}
+              onOpen={onRoomOpen}
+              onChangeValue={onChange}
+              zIndex={3000}
+              zIndexInverse={1000}
+            />
+          </View>
+        )}
+      />
         <View style={styles.menu}>
         <FlatList
           data={DATA1}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          style={styles.list}
-          horizontal
-          ItemSeparatorComponent={() => (
-            <View style={{ width: 12, backgroundColor: "transparent" }} />
-          )}
-        />
-        <FlatList
-          data={DATA2}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -171,8 +162,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   linearGradient: {
-    // alignItems: "center",
-    // justifyContent: "center",
     borderRadius: 5,
     height: "100%",
     width: 400,
@@ -192,6 +181,7 @@ const styles = StyleSheet.create({
   },
   headerBarTitle: {
     alignItems: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     // position: 'absolute',
     marginBottom: 10,
@@ -199,7 +189,10 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 20,
     fontWeight: 'bold',
-
+    position: 'absolute',
+    alignSelf: 'center',
+    top: 45,    
+    marginBottom: 10
   },
   body: {
     paddingLeft: 15,
@@ -208,16 +201,14 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: 20,
+    color: "#660B8E",
     alignSelf: "flex-start",
     marginLeft: 10,
     marginBottom: 10,
   },
   text: {
     fontSize: 16,
-  },
-  wrapperCustom: {
-    padding: 6,
   },
   item: {
     fontSize: 12,
@@ -261,5 +252,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 5
   },
+  dropdownRoom: {
+    zIndex: 20,
+    borderWidth: 0,
+    borderRadius: 16,
+  },
+  dropdown: {
+    zIndex: 10,
+    borderWidth: 0,
+    borderRadius: 16,
+    shadowOffset: {
+      width: 9,
+      height: 9,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6, 
+    marginBottom: 20   
+  }
 });
-export default Home;
+export default Services;
