@@ -38,12 +38,14 @@ const DATA1 = [
 ];
 
 const Bills = ({ navigation }) => {
+  const [datastart, setDatastart] = useState([]);
   const [data, setData] = useState([]);
   const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all?id=1");
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill?id=1");
     const data = await resp.json();
-    setData(data);
-    setFilterNewData(data);
+    setDatastart(data);
+    setData(data.filter(item => item.status == status));
+    setFilterNewData(data.filter(item => item.status == status));
   };
   useEffect(() => {
     fetchData();
@@ -59,7 +61,7 @@ const Bills = ({ navigation }) => {
     if (query) {
       const newData = data.filter((item) => {
         //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
-        const itemData = item.id ? item.id.toUpperCase() : ''.toUpperCase();
+        const itemData = item.code ? item.code.toUpperCase() : ''.toUpperCase();
         const textData = query.toString().toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -71,10 +73,6 @@ const Bills = ({ navigation }) => {
       setFilterNewData(data);
     }
   };
-  useEffect(() => {
-    setData(DATA1.filter(item => item.status == status));
-    setFilterNewData(DATA1.filter(item => item.status == status));
-  }, []);
   const Bill = ({ item }) => (
     <Pressable
     onPress={() =>
@@ -102,7 +100,7 @@ const Bills = ({ navigation }) => {
     ]}
   >
       <View style={styles.title}>
-      <Text style={styles.id}>#{item.id}</Text>
+      <Text style={styles.id}>{item.code}</Text>
       <Text style={{
     fontSize: 15,
     fontStyle: "italic",
@@ -113,10 +111,10 @@ const Bills = ({ navigation }) => {
     </View>
     <View style={styles.title}>
     <Text style={styles.info}>Phòng: {item.room}</Text>
-    <Text style={styles.price}>{item.value}đ</Text>
+    <Text style={styles.price}>{item.price}đ</Text>
     </View>
     <Text style={styles.info}>Loại: {item.type}</Text>
-    <Text style={styles.info}>Hạn thanh toán: {item.startDate} - {item.endDate}</Text>
+    <Text style={styles.info}>Hạn thanh toán: {item.startTime} - {item.endTime}</Text>
   </Pressable>
     );
 
@@ -165,8 +163,8 @@ const renderBill = ({ item }) => {
   onPress={() => {
     setStatus("Chưa thanh toán");
     setStatusColor("#F2BF00");
-    setData(DATA1.filter(item => item.status == "Chưa thanh toán"));
-    setFilterNewData(DATA1.filter(item => item.status == "Chưa thanh toán"));
+    setData(datastart.filter(item => item.status == "Chưa thanh toán"));
+    setFilterNewData(datastart.filter(item => item.status == "Chưa thanh toán"));
   }}
   style={(status == "Chưa thanh toán")? styles.yellowButton : styles.yellowButtonOutline}>
   <Text style={(status == "Chưa thanh toán")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa thanh toán</Text>
@@ -175,8 +173,8 @@ const renderBill = ({ item }) => {
   onPress={() => {
     setStatus("Đã thanh toán");
     setStatusColor("#071D92");
-    setData(DATA1.filter(item => item.status == "Đã thanh toán"));
-    setFilterNewData(DATA1.filter(item => item.status == "Đã thanh toán"));
+    setData(datastart.filter(item => item.status == "Đã thanh toán"));
+    setFilterNewData(datastart.filter(item => item.status == "Đã thanh toán"));
     console.log(filterdata);
   }}
   style={(status == "Đã thanh toán")? styles.blueButton : styles.blueButtonOutline}>
@@ -186,8 +184,8 @@ const renderBill = ({ item }) => {
   onPress={() => {
     setStatus("Trễ hạn");
     setStatusColor("#BD0000");
-    setData(DATA1.filter(item => item.status == "Trễ hạn"));
-    setFilterNewData(DATA1.filter(item => item.status == "Trễ hạn"));
+    setData(datastart.filter(item => item.status == "Trễ hạn"));
+    setFilterNewData(datastart.filter(item => item.status == "Trễ hạn"));
   }}
   style={(status == "Trễ hạn")? styles.redButton : styles.redButtonOutline}>
   <Text style={(status == "Trễ hạn")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#BD0000", fontSize: 15, fontWeight: 'bold'}}>Trễ hạn</Text>

@@ -38,8 +38,33 @@ const DATA1 = [
 ];
 
 const Posts = ({ navigation }) => {
-  const [status, setStatus] = useState("Đã đăng");
-  const [posts, setPosts] = useState(DATA1);
+  const [posts, setPosts] = useState([]);
+  const fetchData = async () => {
+    const resp1 = await fetch("https://tintrott.cleverapps.io/api/room/tus?id=1");
+    const data1 = await resp1.json();
+    setFilterNewData(data1);
+    setPosts(data1)
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = posts.filter((item) => {
+        const itemData = item.address? item.address.toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);      
+    }
+    else{
+      setFilterNewData(posts);
+    }
+  };
   const Post1 = ({ item }) => {
     return (
       <Pressable
@@ -54,7 +79,7 @@ const Posts = ({ navigation }) => {
     }}
   />
       <View style={styles.title}>
-        <Text style={styles.id}>{item.title}</Text>
+        <Text style={styles.id}>{item.name}</Text>
         <Text style={styles.price}>{item.price}đ</Text>
       </View>  
       <View style={{flexDirection: 'row'}}>
@@ -64,7 +89,7 @@ const Posts = ({ navigation }) => {
           color="#F2BF00"
           style={{ marginRight: 15 }}
         />
-        <Text style={styles.info}>Phòng {item.number} người</Text>
+        <Text style={styles.info}>Phòng {item.num} người</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
       <FontAwesome5
@@ -73,7 +98,7 @@ const Posts = ({ navigation }) => {
           color="#660B8E"
           style={{ marginRight: 15 }}
         />
-      <Text style={styles.info}>{item.location}</Text>
+      <Text style={styles.info}>{item.address}</Text>
       </View>
       </Pressable>
     )};
@@ -87,55 +112,6 @@ const Posts = ({ navigation }) => {
       );
     }; 
 
-    const Post2 = ({ item }) => {
-      return (
-        <Pressable
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? "#F3E8FF" : "white",
-            alignItems: "center",
-            // justifyContent: 'center',
-            alignSelf: 'center',
-            width: 370,
-            height: 120,
-            borderRadius: 16,
-            shadowOffset: {
-              width: 9,
-              height: 9,
-            },
-            shadowOpacity: 0.2,
-            shadowRadius: 6,
-            paddingLeft: 15,
-            paddingRight: 15,
-            marginBottom: 10,
-            flexDirection: 'row'
-          },
-        ]}
-      >
-      <Image
-      style={styles.smallImage}
-      source={{
-        uri: item.image,
-      }}
-    />  
-    <View>
-  
-        <Text style={styles.id}>Phòng {item.room}</Text>
-        <Text style={styles.info}></Text>
-        <Text style={styles.info}>Giá phòng: {item.price}đ</Text>
-        <Text style={styles.info}>Khách thuê: {item.hired}/{item.number}</Text>
-        </View>
-      </Pressable>
-      )};
-  
-      const renderPost2 = ({ item }) => {
-        return (
-          <Post2
-            item={item}
-            onPress={() => setSelectedId(item.id)}
-          />
-        );
-      }; 
 
   return (
     <View style={styles.container}>
@@ -161,27 +137,15 @@ const Posts = ({ navigation }) => {
         
                 <TextInput
         style={styles.input}
-        // onChangeText={onChangeText}
-        value=""
+        onChangeText={onChangeSearch}
+        value= {searchQuery}
       ></TextInput>
-      {/* <Pressable
-      onPress={() => 
-        navigation.navigate('Home')
-      }
-      >
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
-      </Pressable> */}
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
         <FlatList
-          data={posts}
-          renderItem={status == "Đã đăng"? renderPost1 : renderPost2}
+          data={filterdata}
+          renderItem={renderPost1}
           keyExtractor={(item) => item.id}
           style={styles.list}
         />   

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput, Image } from "react-native";
-import React, { useState, useEffect, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -124,7 +124,7 @@ const Rooms = ({ navigation }) => {
     if (query) {
       const newData = data.filter((item) => {
         //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
-        const itemData = item.room.toString() ? item.room.toString().toUpperCase() : ''.toUpperCase();
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
         const textData = query.toString().toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -136,10 +136,6 @@ const Rooms = ({ navigation }) => {
       setFilterNewData(data);
     }
   };
-  useEffect(() => {
-    setData(DATA1);
-    setFilterNewData(DATA1);
-  }, []);
   const Room = ({ item }) => {
     return (
       <Pressable
@@ -171,7 +167,7 @@ const Rooms = ({ navigation }) => {
     <FontAwesome5 name='door-open' size={70} color="#660B8E" style={{marginRight: 15}}/>
   <View>
 
-      <Text style={styles.id}>Phòng {item.room}</Text>
+      <Text style={styles.id}>Phòng {item.name}</Text>
       <Text style={styles.info}>Giá: {item.price}đ</Text>
       <Text style={styles.info}>Khách thuê: {item.numRents}/{item.numberOfTenants}</Text>
       <Text style={styles.info}>Thuê từ: {item.rentFrom}</Text>

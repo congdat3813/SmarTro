@@ -57,7 +57,8 @@ const DATA2 = [
 ];
 
 const Posts = ({ navigation }) => {
-
+  const [status, setStatus] = useState("Đã đăng");
+  const [posts, setPosts] = useState([]);
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
   const fetchData = async () => {
@@ -65,26 +66,22 @@ const Posts = ({ navigation }) => {
     const data1 = await resp1.json();
     setData1(data1);
     setFilterNewData(data1);
-
+    setPosts(data1)
     const resp2 = await fetch("https://tintrott.cleverapps.io/api/room/tus/no?id=1");
     const data2 = await resp2.json();
     setData2(data2);
-    setFilterNewData(data2);
   };
   useEffect(() => {
     fetchData();
   },[]);
-
-  const [status, setStatus] = useState("Đã đăng");
-  const [posts, setPosts] = useState(data1);
 
   const [filterdata, setFilterNewData] = useState();
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = (query) => {
     setSearchQuery(query);
     if (query) {
-      const newData = data.filter((item) => {
-        const itemData = item.name.toString() ? item.name.toString().toUpperCase() : ''.toUpperCase();
+      const newData = posts.filter((item) => {
+        const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
         const textData = query.toString().toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -95,23 +92,23 @@ const Posts = ({ navigation }) => {
     }
   };
 
-  const onChangeSearch2 = (query) => {
-    setSearchQuery(query);
-    if (query) {
-      const newData = posts.filter((item) => {
-        //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
-        const itemData = item.num.toString() ? item.num.toString().toUpperCase() : ''.toUpperCase();
-        const textData = query.toString().toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilterNewData(newData);
-      console.log('newData',filterdata);
+  // const onChangeSearch2 = (query) => {
+  //   setSearchQuery(query);
+  //   if (query) {
+  //     const newData = posts.filter((item) => {
+  //       //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
+  //       const itemData = item.num.toString() ? item.num.toString().toUpperCase() : ''.toUpperCase();
+  //       const textData = query.toString().toUpperCase();
+  //       return itemData.indexOf(textData) > -1;
+  //     });
+  //     setFilterNewData(newData);
+  //     console.log('newData',filterdata);
       
-    }
-    else{
-      setFilterNewData(posts);
-    }
-  };
+  //   }
+  //   else{
+  //     setFilterNewData(posts);
+  //   }
+  // };
   const Post1 = ({ item }) => {
     return (
       <Pressable
@@ -194,11 +191,9 @@ const Posts = ({ navigation }) => {
       }}
     />  
     <View>
-  
-        <Text style={styles.id}>Phòng {item.room}</Text>
-        <Text style={styles.info}></Text>
+        <Text style={styles.id}>Phòng {item.name}</Text>
         <Text style={styles.info}>Giá phòng: {item.price}đ</Text>
-        <Text style={styles.info}>Khách thuê: {item.hired}/{item.number}</Text>
+        <Text style={styles.info}>Khách thuê: {item.num}</Text>
         </View>
       </Pressable>
       )};
@@ -236,7 +231,7 @@ const Posts = ({ navigation }) => {
         
                 <TextInput
         style={styles.input}
-        onChangeText={status == "Đã đăng"? onChangeSearch: onChangeSearch2}
+        onChangeText={onChangeSearch}
         value={{searchQuery}}
       ></TextInput>
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
@@ -247,6 +242,7 @@ const Posts = ({ navigation }) => {
   onPress={() => {
     setStatus("Đã đăng");
     setPosts(data1);
+    setFilterNewData(data1);
   }}
   style={(status == "Đã đăng")? styles.violetButton : styles.violetButtonOutline}>
   <Text style={(status == "Đã đăng")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#660B8E", fontSize: 15, fontWeight: 'bold'}}>Đã đăng</Text>
@@ -255,6 +251,7 @@ const Posts = ({ navigation }) => {
   onPress={() => {
     setStatus("Chưa đăng");
     setPosts(data2);
+    setFilterNewData(data2);
   }}
   style={(status == "Chưa đăng")? styles.yellowButton : styles.yellowButtonOutline}>
   <Text style={(status == "Chưa đăng")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa đăng</Text>

@@ -42,7 +42,7 @@ const Services = ({ navigation }) => {
 
   const [data, setData] = useState([]);
   const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all?id=1");
+    const resp = await fetch("https://tintrott.cleverapps.io/api/service?id=1");
     const data = await resp.json();
     setData(data);
     setFilterNewData(data);
@@ -76,8 +76,14 @@ const Services = ({ navigation }) => {
         },
       ]}
     >
-      <FontAwesome5 name={item.icon} size={45} color={item.color} />
-      <Text style={styles.item}>{item.title}</Text>
+    {item.name ==="Bảo vệ" ? 
+      <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+      item.name === "Wifi"?
+        <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+        <FontAwesome5 name="trash" size={45} color="#071D92" />
+      
+    }
+      <Text style={styles.item}>{item.name}</Text>
     </Pressable>
   );
 
