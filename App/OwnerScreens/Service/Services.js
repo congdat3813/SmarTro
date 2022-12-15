@@ -3,45 +3,13 @@ import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DropDownPicker from "react-native-dropdown-picker";
-import {useForm, Controller, set} from 'react-hook-form';
 import {Dropdown} from 'react-native-element-dropdown';
-const rooms = [
-  { label: "101", value: "101" },
-  { label: "102", value: "102" },
-  { label: "103", value: "103" },
-  { label: "201", value: "201" },
-  { label: "202", value: "202" },
-  { label: "203", value: "203" },
-];
 
-const DATA1 = [
-  {
-    id: "1",
-    title: "Bảo vệ",
-    icon: "user-shield",
-    color: "#071D92",
-  },
-  {
-    id: "2",
-    title: "Wifi",
-    icon: "wifi",
-    color: "#071D92",
-  },
-  {
-    id: "3",
-    title: "Rác",
-    icon: "trash",
-    color: "#071D92",
-  },
-];
 
 const Services = ({ navigation }) => {
   const [service, setService] = useState([]);
   const [roomValue, setRoomValue] = useState(null);
-  const [roomlist, setRoomList] = useState(rooms);
+  const [roomlist, setRoomList] = useState([]);
   const [room, setRoom] = useState(null);
   // const fetchData = async () => {
   //   const resp = await fetch("https://tintrott.cleverapps.io/api/service?id=1");
@@ -87,8 +55,8 @@ const Services = ({ navigation }) => {
     >
     {item.name ==="Bảo vệ" ? 
       <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
-      item.name === "Wifi"?
-        <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+      item.name === "Wifi" ?
+        <FontAwesome5 name="wifi" size={45} color="#071D92" />:
         <FontAwesome5 name="trash" size={45} color="#071D92" />
       
     }

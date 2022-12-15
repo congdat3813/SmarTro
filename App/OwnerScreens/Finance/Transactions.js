@@ -39,7 +39,7 @@ const Transactions = ({ navigation }) => {
     const resp = await fetch("https://tintrott.cleverapps.io/api/revenue/all?id=1");
     const data = await resp.json();
     setData(data);
-    setFilterNewData(data);
+    // setFilterNewData(data);
   };
   useEffect(() => {
     fetchData();

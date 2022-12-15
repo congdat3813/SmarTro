@@ -7,18 +7,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SwipeableModal1 from "./SwipeableModal1";
 import SwipeableModal2 from "./SwipeableModal2";
+import moment from 'moment';
 
 const BillInfo = ({ navigation, route: { params } }) => {
   const [item, setItem] = useState({});
   const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all/1");
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all/" + params.item.id);
     const data = await resp.json();
     setItem(data);
     setFilterNewData(data);
   };
   useEffect(() => {
     fetchData();
-  },[]);
+  },{});
 
   // const {item, fromFinance} = params;
   // const backPage = fromFinance? 'Finance' : 'Bills';
@@ -44,7 +45,7 @@ const BillInfo = ({ navigation, route: { params } }) => {
 
         <View style={styles.infoTag}>
         <View style={styles.title}>
-      <Text style={styles.id}>#{item.id}</Text>
+      <Text style={styles.id}>{item.code}</Text>
       <Text style={{
     fontSize: 15,
     fontStyle: "italic",
@@ -64,11 +65,11 @@ const BillInfo = ({ navigation, route: { params } }) => {
 
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Tổng cộng</Text>
-            <Text style={styles.price}>{item.value}đ</Text>
+            <Text style={styles.price}>{item.price}đ</Text>
           </View>
 
             <Text style={styles.detailInfo}>Hạn thanh toán</Text>
-            <Text style={styles.description}>{item.startDate} - {item.endDate}</Text>
+            <Text style={styles.description}>{moment(item.startTime).format('DD/MM/YYYY')} - {moment(item.endTime).format('DD/MM/YYYY')}</Text>
 
         </View>
 

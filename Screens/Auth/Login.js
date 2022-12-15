@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Button, Switch, Pressable, Dimensions, Alert } from 'react-native';
 import React, {useState} from 'react';
 import usePasswordVisibility from '../../hooks/usePasswordVisibility';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import {
   useFonts,
   BeVietnam_700Bold,
 } from '@expo-google-fonts/be-vietnam';
+import Toast from 'react-native-toast-message';
 
 export default function Login({navigation}) {
   const [userName, setUserName] = useState('');
@@ -17,6 +18,41 @@ export default function Login({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = usePasswordVisibility();
+  const [curUser, setCurUser] = useState([]);
+  // const showToast = message => {
+  //   Toast.show({
+  //     type: 'success',
+  //     text1: message,
+  //   });
+  // };
+  const fetchLogin = async () =>{
+    try{
+    const resp =  await fetch('https://tintrott.cleverapps.io/api/user/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'username': userName,
+        'password': userPassword,
+      },
+    });
+    const data = await resp.json();
+    console.log(data);
+    setCurUser(data);
+    }
+    catch (error) {
+      console.error(error);
+    }
+  }
+  // const loginProcess=() =>{
+  //   if(curUser!= null) {
+  //     showToast('Đăng nhập thành công');
+  //     navigation.navigate('Home');
+  //   }
+  //   else{
+  //     showToast('Tên đăng nhập hoặc  mật khẩu không đúng');
+  //   }
+  // }
   // const handleSubmitPress = () => {
   //   setErrortext('');
   //   if (!userEmail) {
@@ -105,6 +141,7 @@ export default function Login({navigation}) {
               <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
             </Pressable>
           </View>
+          {curUser? <Text styles={{color:'red'}}>Sai mật khẩu</Text>:<></> }
         </View>
         <View style={styles.guide}>
           <View style={styles.remeberAccount}>
@@ -122,7 +159,11 @@ export default function Login({navigation}) {
             Quên mật khẩu ?
           </Link>
         </View>
-        <Pressable style={styles.button} onPress={() => navigation.navigate('Home')}>
+        <Pressable style={styles.button} onPress={() => {
+          fetchLogin();
+          navigation.navigate('Home');
+          }
+          }>
           <Text style={styles.textBut}>Đăng nhập</Text>
         </Pressable>
         <View style={styles.register}>

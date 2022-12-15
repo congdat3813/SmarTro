@@ -48,7 +48,7 @@ const DATA2 = [
   },
   {
     id: "6",
-    title: "    Quản lý \n khách thuê",
+    title: "  Thông tin \n khách thuê",
     icon: "user-friends",
     color: "#F2BF00",
     name: "ProfileInfo",

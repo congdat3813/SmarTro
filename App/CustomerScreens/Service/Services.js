@@ -3,10 +3,6 @@ import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DropDownPicker from "react-native-dropdown-picker";
-import {useForm, Controller} from 'react-hook-form';
 
 const rooms = [
   { label: "101", value: "101" },
@@ -101,13 +97,6 @@ const Services = ({ navigation }) => {
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable> 
-    <Pressable
-      onPress={() => 
-        navigation.navigate('AddService')
-      }
-    >
-<FontAwesome5 name='plus-circle' size={30} color='#071D92' style={{marginRight: 15}}/>
-</Pressable>    
           
           </View>
           <Text style={styles.headerText}>Dịch vụ</Text>

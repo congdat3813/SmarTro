@@ -104,7 +104,6 @@ const Home = ({ navigation }) => {
         </View>
         
         <View style={styles.body}>
-        <Text style={styles.header}>Nhắc nhở</Text>
         <Text style={styles.header}>Khởi tạo</Text>
 
         <Pressable

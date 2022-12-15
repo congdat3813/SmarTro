@@ -2,16 +2,7 @@ import React, { Fragment, Component } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import Modal from "react-native-modal";
 
-const postData = async (url, data) => {
-  const response = await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(data)
-  });
-  return response.json();
-};
-postData('https://example.com/answer', {  });
-
-class SwipeableModal extends Component {
+class SwipeableModal2 extends Component {
   state = {
     visible: false
   };
@@ -31,7 +22,7 @@ class SwipeableModal extends Component {
         >
           <View style={styles.modalContainer}>
             <Text style={styles.description}>
-            Bạn có chắc muốn thêm phòng?
+            Sự cố sẽ được chuyển sang trạng thái “Đã xử lý”!
             </Text>
             <View style={{flexDirection: 'row'}}>
             <Pressable
@@ -55,14 +46,14 @@ class SwipeableModal extends Component {
         <Pressable
         onPress={this.openModal}
         style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Thêm</Text>
-        </Pressable>
+    <Text style={{color: 'white', fontSize: 16,  fontWeight: 'bold'}}>Đã xử lý</Text>
+  </Pressable>    
       </Fragment>
     );
   }
 }
 
-export default SwipeableModal;
+export default SwipeableModal2;
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -73,7 +64,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     // borderColor: "#C0C0C0",
     // borderWidth: 2,
-    marginVertical: 350
+    marginVertical: 345,
+    paddingHorizontal: 10
   },
   description: {
     // padding: 20,
@@ -83,9 +75,10 @@ const styles = StyleSheet.create({
   button: {
     width: 370,
     height: 50,
-    backgroundColor: "#660B8E",
+    backgroundColor: "#0BA108",
     borderRadius: 6,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginRight: 20
   },
 });

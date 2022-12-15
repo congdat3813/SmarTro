@@ -6,56 +6,10 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const DATA1 = [
-  {
-    id: "1234",
-    status: "Đang đợi xử lý",
-    room: 101,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị vỡ.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-  {
-    id: "2345",
-    status: "Đang xử lý",
-    room: 102,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị cháy.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-  {
-    id: "3456",
-    status: "Đã xử lý",
-    room: 102,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị cháy.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-];
-
 const Troubles = ({ navigation }) => {
   const [data, setData] = useState([]);
-  const [filterdata, setFilterNewData] = useState();
-  const [searchQuery, setSearchQuery] = useState('');
-  const onChangeSearch = (query) => {
-    setSearchQuery(query);
-    if (query) {
-      const newData = data.filter((item) => {
-        const itemData = item.type? item.type.toUpperCase() : ''.toUpperCase();
-        const textData = query.toString().toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilterNewData(newData);      
-    }
-    else{
-      setFilterNewData(data);
-    }
-  };
   const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/incident?id=1&type=1");
+    const resp = await fetch("https://tintrott.cleverapps.io/api/incident?id=2");
     const data = await resp.json();
     setData(data);
     setFilterNewData(data);
@@ -64,6 +18,9 @@ const Troubles = ({ navigation }) => {
     fetchData();
   },[]);
 
+  const [status, setStatus] = useState(0);
+  const [stt, setStt] = useState("Đang đợi xử lý");
+  const [statusColor, setStatusColor] = useState("#F2BF00");
   const Trouble = ({ item }) => {
     return (
       <Pressable
@@ -102,8 +59,16 @@ const Troubles = ({ navigation }) => {
 
       {/* <Text style={styles.id}>#{item.id}</Text> */}
       <View style={styles.title}>
+      <Text style={styles.id}>#{item.id}</Text>
+      <Text style={{
+    fontSize: 15,
+    fontStyle: "italic",
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: statusColor
+  }}>{item.status}</Text>
     </View>
-      <Text style={styles.info}>{item.status}</Text>
+      <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Loại: {item.type}</Text>
       <Text style={styles.info}>Thời gian: {item.date}</Text>
       </View>
@@ -123,7 +88,68 @@ const Troubles = ({ navigation }) => {
       <LinearGradient
         colors={["#F6E8C3", "#D8BBE2"]}
         style={styles.linearGradient}
-      >     
+      >
+        <View style={styles.headerBar}>
+          <View style={styles.headerBarTitle}>
+          <Pressable
+      onPress={() => 
+        navigation.navigate('Home')
+      }
+    >
+      <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
+    </Pressable>   
+    <Pressable
+      onPress={() => 
+        navigation.navigate('AddTrouble')
+      }
+    >
+      <FontAwesome5 name='plus-circle' size={30} color='#BD0000' style={{marginRight: 15}}/>
+    </Pressable>   
+          
+          </View>
+          <Text style={styles.headerText}>Sự cố</Text>
+        </View>
+        <View style={styles.body}>
+
+        <View style={styles.buttons}>
+
+        <Pressable
+          onPress={() => {
+            setStatus(0);
+            setStt("Đang đợi xử lý");
+            setStatusColor("#F2BF00");
+          }}
+          style={(status == 0)? styles.yellowButton : styles.yellowButtonOutline}>
+          <Text style={(status == 0)? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Đang đợi xử lý</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            setStatus(1);
+            setStt("Đang xử lý");
+            setStatusColor("#071D92");
+          }}
+          style={(status == 1)? styles.blueButton : styles.blueButtonOutline}>
+          <Text style={(status == 1)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đang xử lý</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            setStatus(2);
+            setStt("Đã xử lý");
+            setStatusColor("#0BA108");
+          }}
+          style={(status == 2)? styles.greenButton : styles.greenButtonOutline}>
+          <Text style={(status == 2)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#0BA108", fontSize: 15, fontWeight: 'bold'}}>Đã xử lý</Text>
+        </Pressable>
+        </View>
+
+        <FlatList
+          data={data.filter(item => item.status == stt)}
+          renderItem={renderTrouble}
+          keyExtractor={(item) => item.id}
+          style={styles.list}
+        />        
+
+</View>
       </LinearGradient>
     </View>
   );
@@ -341,23 +367,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 10,
     alignSelf: 'center'
-  },
-  input: {
-    height: 50,
-    width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 12,
-    shadowOffset: {
-      width: 9,
-      height: 9,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    paddingLeft: 55
-  },
-  searchIcon: {
-    position: 'absolute',
-    left: 20
-  },
+  }
 });
 export default Troubles;

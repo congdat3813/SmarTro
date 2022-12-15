@@ -5,19 +5,31 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import moment from 'moment';
 
 const ProfileInfo = ({ navigation, route: { params } }) => {
-  const item =   {
-    id: "215529249",
-    name: 'Nguyễn Văn A',
-    phone: '0123456789',
-    email: 'nva@gmail.com',
-    DoB: '05/01/2001',
-    room: 101,
-    startDate: '01/01/2021',
-    image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  // const item =   {
+  //   id: "215529249",
+  //   name: 'Nguyễn Văn A',
+  //   phone: '0123456789',
+  //   email: 'nva@gmail.com',
+  //   DoB: '05/01/2001',
+  //   room: 101,
+  //   startDate: '01/01/2021',
+  //   image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  // };
+
+  const [item, setItem] = useState({});
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/tenant/1");
+    const data = await resp.json();
+    setItem(data);
+    setFilterNewData(data);
   };
+  useEffect(() => {
+    fetchData();
+  },{});
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -55,7 +67,7 @@ const ProfileInfo = ({ navigation, route: { params } }) => {
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Thuê từ</Text>
-            <Text style={styles.price}>{item.startDate}</Text>
+            <Text style={styles.price}>{moment(item.rentFrom).format('DD/MM/YYYY')}</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Số điện thoại</Text>
@@ -67,18 +79,18 @@ const ProfileInfo = ({ navigation, route: { params } }) => {
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>CMND/CCCD</Text>
-            <Text style={styles.price}>{item.id}</Text>
+            <Text style={styles.price}>{item.cccd}</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Ngày sinh</Text>
-            <Text style={styles.price}>{item.DoB}</Text>
+            <Text style={styles.price}>{moment(item.birthday).format('DD/MM/YYYY')}</Text>
           </View>
 
         </View>
 
         <Pressable
       onPress={() => 
-        navigation.navigate('UpdateProfile')
+        navigation.navigate('UpdateProfile', {item})
       }
         style={styles.button}>
           <Text style={{color: 'white', fontSize: 16,  fontWeight: 'bold'}}>Chỉnh sửa</Text>

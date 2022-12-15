@@ -6,6 +6,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SwipeableModal from "./SwipeableModal";
+import moment from 'moment';
 
 const TenantInfo = ({ navigation, route: { params } }) => {
   const [item, setItem] = useState({});
@@ -17,7 +18,7 @@ const TenantInfo = ({ navigation, route: { params } }) => {
   };
   useEffect(() => {
     fetchData();
-  },[]);
+  },{});
   // const {item, fromTenants} = params;
   return (
     <View style={styles.container}>
@@ -56,7 +57,7 @@ const TenantInfo = ({ navigation, route: { params } }) => {
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Thuê từ</Text>
-            <Text style={styles.price}>{item.startDate}</Text>
+            <Text style={styles.price}>{moment(item.time).format('DD/MM/YYYY')}</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Số điện thoại</Text>
@@ -72,7 +73,7 @@ const TenantInfo = ({ navigation, route: { params } }) => {
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Ngày sinh</Text>
-            <Text style={styles.price}>{item.birthday}</Text>
+            <Text style={styles.price}>{moment(item.birthday).format('DD/MM/YYYY')}</Text>
           </View>
 
         </View>

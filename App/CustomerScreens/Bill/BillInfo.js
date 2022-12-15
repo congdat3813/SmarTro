@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import moment from 'moment';
 
 const BillInfo = ({ navigation, route: { params } }) => {
   const {item, fromFinance} = params;
@@ -51,11 +52,11 @@ const BillInfo = ({ navigation, route: { params } }) => {
 
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Tổng cộng</Text>
-            <Text style={styles.price}>{item.value}đ</Text>
+            <Text style={styles.price}>{item.price}đ</Text>
           </View>
 
             <Text style={styles.detailInfo}>Hạn thanh toán</Text>
-            <Text style={styles.description}>{item.startDate} - {item.endDate}</Text>
+            <Text style={styles.description}>{moment(item.startTime).format('DD/MM/YYYY')} - {moment(item.endTime).format('DD/MM/YYYY')}</Text>
 
         </View>
 
@@ -65,19 +66,6 @@ const BillInfo = ({ navigation, route: { params } }) => {
         // onChangeText={onChangeText}
         value=""
       ></TextInput>
-
-        <View style={styles.buttons}>
-
-        <Pressable style={styles.yellowButton}>
-          <Text style={{color: 'black', fontSize: 15, fontWeight: 'bold'}}>Chỉnh sửa</Text>
-        </Pressable>
-        <Pressable style={styles.blueButton}>
-          <Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Thanh toán</Text>
-        </Pressable>
-        <Pressable style={styles.redButton}>
-          <Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Xóa</Text>
-        </Pressable>
-        </View>
 
         {/* <View style={styles.buttons}>
 

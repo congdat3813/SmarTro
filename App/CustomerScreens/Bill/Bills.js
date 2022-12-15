@@ -5,40 +5,38 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import moment from 'moment';
 
-const DATA1 = [
-  {
-    id: "1234",
-    status: 'Chưa thanh toán',
-    room: 101,
-    type: 'Tiền phòng',
-    value: 733333,
-    startDate: '01/01/2021',
-    endDate: '01/02/2021'
-  },
-  {
-    id: "2345",
-    status: 'Đã thanh toán',
-    room: 102,
-    type: 'Tiền phòng',
-    value: 733333,
-    startDate: '01/01/2021',
-    endDate: '01/02/2021'
-  },
-  {
-    id: "3456",
-    status: 'Trễ hạn',
-    room: 103,
-    type: 'Tiền phòng',
-    value: 733333,
-    startDate: '01/01/2021',
-    endDate: '01/02/2021'
-  },
-];
 
 const Bills = ({ navigation }) => {
-  const [status, setStatus] = useState("Chưa thanh toán");
-  const [statusColor, setStatusColor] = useState("#F2BF00");
+
+  const [data, setData] = useState([]);
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = data.filter((item) => {
+        const itemData = item.code ? item.code.toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);
+      console.log('newData',filterdata);
+    }
+    else{
+      setFilterNewData(data);
+    }
+  };
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/tenants?id=2");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
   const Bill = ({ item }) => (
     <Pressable
     onPress={() =>
@@ -72,15 +70,15 @@ const Bills = ({ navigation }) => {
     fontStyle: "italic",
     fontWeight: 'bold',
     // marginBottom: 5,
-    color: statusColor
+    color: item.status == "Chưa thanh toán"? '#F2BF00' : (item.status == "Đã thanh toán"? "#071D92" : "#BD0000")
   }}>{item.status}</Text>
     </View>
     <View style={styles.title}>
     <Text style={styles.info}>Phòng: {item.room}</Text>
-    <Text style={styles.price}>{item.value}đ</Text>
+    <Text style={styles.price}>{item.price}đ</Text>
     </View>
     <Text style={styles.info}>Loại: {item.type}</Text>
-    <Text style={styles.info}>Hạn thanh toán: {item.startDate} - {item.endDate}</Text>
+    <Text style={styles.info}>Hạn thanh toán: {moment(item.startTime).format('DD/MM/YYYY')} - {moment(item.endTime).format('DD/MM/YYYY')}</Text>
   </Pressable>
     );
 
@@ -117,8 +115,8 @@ const renderBill = ({ item }) => {
         
                 <TextInput
         style={styles.input}
-        // onChangeText={onChangeText}
-        value=""
+        onChangeText={onChangeSearch}
+        value={searchQuery}
       ></TextInput>
                   {/* <FontAwesome5
               name="sliders-h"
@@ -129,7 +127,7 @@ const renderBill = ({ item }) => {
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
-      <View style={styles.buttons}>
+      {/* <View style={styles.buttons}>
 
 <Pressable
   onPress={() => {
@@ -155,10 +153,10 @@ const renderBill = ({ item }) => {
   style={(status == "Trễ hạn")? styles.redButton : styles.redButtonOutline}>
   <Text style={(status == "Trễ hạn")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#BD0000", fontSize: 15, fontWeight: 'bold'}}>Trễ hạn</Text>
 </Pressable>
-</View>
+</View> */}
 
 <FlatList
-          data={DATA1.filter(item => item.status == status)}
+          data={filterdata}
           renderItem={renderBill}
           keyExtractor={(item) => item.id}
           style={styles.list}

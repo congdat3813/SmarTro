@@ -3,9 +3,6 @@ import { FlatList, Pressable, StyleSheet, Text, View, Image, Alert, TextInput } 
 import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DropDownPicker from "react-native-dropdown-picker";
 import {useForm, Controller} from 'react-hook-form';
 // import * as ImagePicker from 'expo-image-picker';
 // import Button from "./Button";

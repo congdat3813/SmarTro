@@ -5,7 +5,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DropDownPicker from "react-native-dropdown-picker";
 import {useForm, Controller} from 'react-hook-form';
 import SwipeableModal from "./SwipeableModal";
 // import * as ImagePicker from 'expo-image-picker';
@@ -22,6 +21,7 @@ const rooms = [
 ];
 
 const AddRoom = ({ navigation }) => {
+
   const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImageAsync = async () => {
@@ -40,11 +40,6 @@ const AddRoom = ({ navigation }) => {
   const PlaceholderImage = require('../../../assets/logo.png');
 
   const { handleSubmit, control } = useForm();
-  const [genderOpen, setGenderOpen] = useState(false);
-  const [genderValue, setGenderValue] = useState(null);
-  const [gender, setGender] = useState(rooms);
-  const onGenderOpen = useCallback(() => {
-  }, []);
   return (
     <View style={styles.container}>
       <LinearGradient

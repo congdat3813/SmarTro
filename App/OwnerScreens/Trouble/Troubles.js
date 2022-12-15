@@ -5,36 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-const DATA1 = [
-  {
-    id: "1234",
-    status: "Đang đợi xử lý",
-    room: 101,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị vỡ.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-  {
-    id: "2345",
-    status: "Đang xử lý",
-    room: 102,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị cháy.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-  {
-    id: "3456",
-    status: "Đã xử lý",
-    room: 102,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị cháy.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-];
+import moment from "moment";
 
 const Troubles = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -118,7 +89,7 @@ const Troubles = ({ navigation }) => {
     </View>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Loại: {item.type}</Text>
-      <Text style={styles.info}>Thời gian: {item.date}</Text>
+      <Text style={styles.info}>Thời gian: {moment(item.time).format('DD/MM/YYYY')}</Text>
       </View>
     </Pressable>
     )};

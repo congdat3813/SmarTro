@@ -2,15 +2,6 @@ import React, { Fragment, Component } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import Modal from "react-native-modal";
 
-const postData = async (url, data) => {
-  const response = await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(data)
-  });
-  return response.json();
-};
-postData('https://example.com/answer', {  });
-
 class SwipeableModal extends Component {
   state = {
     visible: false
@@ -31,7 +22,7 @@ class SwipeableModal extends Component {
         >
           <View style={styles.modalContainer}>
             <Text style={styles.description}>
-            Bạn có chắc muốn thêm phòng?
+            Bạn có chắc muốn báo cáo sự cố?
             </Text>
             <View style={{flexDirection: 'row'}}>
             <Pressable
@@ -83,7 +74,7 @@ const styles = StyleSheet.create({
   button: {
     width: 370,
     height: 50,
-    backgroundColor: "#660B8E",
+    backgroundColor: "#BD0000",
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center'

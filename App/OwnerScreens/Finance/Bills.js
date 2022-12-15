@@ -6,6 +6,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NumberFormat from 'react-number-format';
+import moment from 'moment';
 
 const DATA1 = [
   {
@@ -114,7 +115,7 @@ const Bills = ({ navigation }) => {
     <Text style={styles.price}>{item.price}đ</Text>
     </View>
     <Text style={styles.info}>Loại: {item.type}</Text>
-    <Text style={styles.info}>Hạn thanh toán: {item.startTime} - {item.endTime}</Text>
+    <Text style={styles.info}>Hạn thanh toán: {moment(item.startTime).format('DD/MM/YYYY')} - {moment(item.endTime).format('DD/MM/YYYY')}</Text>
   </Pressable>
     );
 
