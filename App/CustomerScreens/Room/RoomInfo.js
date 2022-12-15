@@ -15,7 +15,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const RoomInfo = ({ navigation, route: { params } }) => {
-  const item =   {
+  
+    const item =   {
     id: "1",
     room: 101,
     area: 45,
@@ -192,12 +193,12 @@ const RoomInfo = ({ navigation, route: { params } }) => {
           <Text style={styles.headerText}>Thông tin phòng</Text>
         </View>
         <View style={styles.body}>
-        <Image
+        {/* <Image
         style={styles.largeImage}
         source={{
-          uri: item.image,
+          uri: bytetostring(byteimg),
         }}
-      />  
+      /> */}
 
 <View style={styles.buttons}>
       <Pressable

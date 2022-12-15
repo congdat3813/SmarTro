@@ -39,12 +39,15 @@ const DATA1 = [
 ];
 
 const Services = ({ navigation }) => {
-  const { handleSubmit, control } = useForm();
-  const [roomOpen, setRoomOpen] = useState(false);
-  const [roomValue, setRoomValue] = useState(null);
-  const [room, setRoom] = useState(rooms);
-  const onRoomOpen = useCallback(() => {
-  }, []);
+  const [service, setService] = useState([]);
+  const fetchService = async (roomid) => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/service?id=1");
+    const data = await resp.json();
+    setService(data);
+  };
+  useEffect(() => {
+    fetchService();
+  },[service]);
   const Item = ({ item }) => (
     <Pressable
       style={() => [
@@ -64,8 +67,14 @@ const Services = ({ navigation }) => {
         },
       ]}
     >
-      <FontAwesome5 name={item.icon} size={45} color={item.color} />
-      <Text style={styles.item}>{item.title}</Text>
+    {item.name ==="Bảo vệ" ? 
+      <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+      item.name === "Wifi"?
+        <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+        <FontAwesome5 name="trash" size={45} color="#071D92" />
+      
+    }
+      <Text style={styles.item}>{item.name}</Text>
     </Pressable>
   );
 
@@ -107,33 +116,9 @@ const Services = ({ navigation }) => {
         <View style={styles.body}>
         
         <Text style={styles.header}>Xem dịch vụ</Text>
-        <Controller
-        name="room"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.dropdownRoom}>
-            <DropDownPicker
-              style={styles.dropdown}
-              open={roomOpen}
-              value={roomValue} //roomValue
-              items={room}
-              setOpen={setRoomOpen}
-              setValue={setRoomValue}
-              setItems={setRoom}
-              placeholder="Chọn phòng"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onRoomOpen}
-              onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-        )}
-      />
         <View style={styles.menu}>
         <FlatList
-          data={DATA1}
+          data={service}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -264,6 +249,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6, 
     marginBottom: 20   
-  }
+  },
 });
 export default Services;
