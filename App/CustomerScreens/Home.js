@@ -7,6 +7,23 @@ import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const DATA = [
+  {
+    id: "7",
+    title: "Tìm phòng",
+    icon: "search",
+    color: "#F08672",
+    name: "Posts",
+  },
+  {
+    id: "5",
+    title: "Phòng đã lưu",
+    icon: "bookmark",
+    color: "#F08672",
+    name: "SavedPosts",
+  },
+];
+
 const DATA1 = [
   {
     id: "1",
@@ -40,16 +57,9 @@ const DATA2 = [
     name: "Troubles",
   },
   {
-    id: "5",
-    title: "Phòng đã lưu",
-    icon: "bookmark",
-    color: "#F2BF00",
-    name: "SavedPosts",
-  },
-  {
     id: "6",
-    title: "    Quản lý \n khách thuê",
-    icon: "user-friends",
+    title: "Thông tin \n cá nhân",
+    icon: "user-alt",
     color: "#F2BF00",
     name: "ProfileInfo",
   },
@@ -111,10 +121,20 @@ const Home = ({ navigation }) => {
         </View>
         
         <View style={styles.body}>
-        <Text style={styles.header}>Nhắc nhở</Text>
+        {/* <Text style={styles.header}>Nhắc nhở</Text> */}
         <Text style={styles.header}>Khởi tạo</Text>
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={styles.list}
+          horizontal
+          ItemSeparatorComponent={() => (
+            <View style={{ width: 12, backgroundColor: "transparent" }} />
+          )}
+        />
 
-        <Pressable
+        {/* <Pressable
     onPress={() => {
       navigation.navigate('Posts')
     }}
@@ -139,7 +159,7 @@ const Home = ({ navigation }) => {
   >
     <FontAwesome5 name="search" size={45} color="#F08672" />
     <Text style={styles.item}>Tìm phòng</Text>
-  </Pressable>
+  </Pressable> */}
         
         <Text style={styles.header}>Quản lý</Text>
         <View style={styles.menu}>

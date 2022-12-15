@@ -48,7 +48,7 @@ const AddRoom = ({ navigation }) => {
               </Text>
               <View style={{flexDirection: 'row'}}>
               <Pressable
-                onPress={()=>setVisible(false)}
+                onPress={()=>{setVisible(false); postData('https://tintrott.cleverapps.io/api/room', { name: room, area: area, price: price, numOfTenants: num, userId: 1, sex: 'Nam/Nữ' });}}
               >
                 
                   <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Đồng ý</Text>
@@ -66,7 +66,7 @@ const AddRoom = ({ navigation }) => {
           </Modal>
   
           <Pressable
-          onPress={()=> {setVisible(true); postData('https://tintrott.cleverapps.io/api/room', { name: room, area: area, price: price, numOfTenants: num, userId: 1, sex: 'Nam/Nữ' });}}
+          onPress={()=> {setVisible(true); }}
           style={styles.modalButton}>
             <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Thêm</Text>
           </Pressable>

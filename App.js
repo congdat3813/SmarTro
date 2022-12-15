@@ -40,51 +40,51 @@ import CUpdateProfile from './App/CustomerScreens/Profile/UpdateProfile';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  return (
-    <NavigationContainer>
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={OHome} />
-      <Stack.Screen name="Posts" component={OPosts} />
-      <Stack.Screen name="PostInfo" component={OPostInfo} />
-      <Stack.Screen name="AddPost" component={OAddPost} />
-      <Stack.Screen name="Rooms" component={ORooms} />
-      <Stack.Screen name="RoomInfo" component={ORoomInfo} />
-      <Stack.Screen name="AddRoom" component={OAddRoom} />
-      <Stack.Screen name="Tenants" component={OTenants} />
-      <Stack.Screen name="TenantInfo" component={OTenantInfo} />
-      <Stack.Screen name="Finance" component={OFinance} />
-      <Stack.Screen name="Transactions" component={OTransactions} />
-      <Stack.Screen name="TransactionInfo" component={OTransactionInfo} />
-      <Stack.Screen name="Bills" component={OBills} />
-      <Stack.Screen name="BillInfo" component={OBillInfo} />
-      <Stack.Screen name="Services" component={OServices} />
-      <Stack.Screen name="AddService" component={OAddService} />
-      <Stack.Screen name="Troubles" component={OTroubles} />
-      <Stack.Screen name="TroubleInfo" component={OTroubleInfo} />
-      <Stack.Screen name="AddTrouble" component={OAddTrouble} />
-    </Stack.Navigator>
-  </NavigationContainer>
-  );
-
   // return (
   //   <NavigationContainer>
   //   <Stack.Navigator screenOptions={{headerShown: false}}>
-  //     <Stack.Screen name="Home" component={CHome} />
-  //     <Stack.Screen name="Posts" component={CPosts} />
-  //     <Stack.Screen name="PostInfo" component={CPostInfo} />
-  //     <Stack.Screen name="RoomInfo" component={CRoomInfo} />
-  //     <Stack.Screen name="Bills" component={CBills} />
-  //     <Stack.Screen name="BillInfo" component={CBillInfo} />
-  //     <Stack.Screen name="Services" component={CServices} />
-  //     <Stack.Screen name="Troubles" component={CTroubles} />
-  //     <Stack.Screen name="TroubleInfo" component={CTroubleInfo} />
-  //     <Stack.Screen name="AddTrouble" component={CAddTrouble} />
-  //     <Stack.Screen name="SavedPosts" component={CSavedPosts} />
-  //     <Stack.Screen name="ProfileInfo" component={CProfileInfo} />
-  //     <Stack.Screen name="UpdateProfile" component={CUpdateProfile} />
+  //     <Stack.Screen name="Home" component={OHome} />
+  //     <Stack.Screen name="Posts" component={OPosts} />
+  //     <Stack.Screen name="PostInfo" component={OPostInfo} />
+  //     <Stack.Screen name="AddPost" component={OAddPost} />
+  //     <Stack.Screen name="Rooms" component={ORooms} />
+  //     <Stack.Screen name="RoomInfo" component={ORoomInfo} />
+  //     <Stack.Screen name="AddRoom" component={OAddRoom} />
+  //     <Stack.Screen name="Tenants" component={OTenants} />
+  //     <Stack.Screen name="TenantInfo" component={OTenantInfo} />
+  //     <Stack.Screen name="Finance" component={OFinance} />
+  //     <Stack.Screen name="Transactions" component={OTransactions} />
+  //     <Stack.Screen name="TransactionInfo" component={OTransactionInfo} />
+  //     <Stack.Screen name="Bills" component={OBills} />
+  //     <Stack.Screen name="BillInfo" component={OBillInfo} />
+  //     <Stack.Screen name="Services" component={OServices} />
+  //     <Stack.Screen name="AddService" component={OAddService} />
+  //     <Stack.Screen name="Troubles" component={OTroubles} />
+  //     <Stack.Screen name="TroubleInfo" component={OTroubleInfo} />
+  //     <Stack.Screen name="AddTrouble" component={OAddTrouble} />
   //   </Stack.Navigator>
   // </NavigationContainer>
   // );
+
+  return (
+    <NavigationContainer>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Home" component={CHome} />
+      <Stack.Screen name="Posts" component={CPosts} />
+      <Stack.Screen name="PostInfo" component={CPostInfo} />
+      <Stack.Screen name="RoomInfo" component={CRoomInfo} />
+      <Stack.Screen name="Bills" component={CBills} />
+      <Stack.Screen name="BillInfo" component={CBillInfo} />
+      <Stack.Screen name="Services" component={CServices} />
+      <Stack.Screen name="Troubles" component={CTroubles} />
+      <Stack.Screen name="TroubleInfo" component={CTroubleInfo} />
+      <Stack.Screen name="AddTrouble" component={CAddTrouble} />
+      <Stack.Screen name="SavedPosts" component={CSavedPosts} />
+      <Stack.Screen name="ProfileInfo" component={CProfileInfo} />
+      <Stack.Screen name="UpdateProfile" component={CUpdateProfile} />
+    </Stack.Navigator>
+  </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({
