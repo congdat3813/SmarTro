@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from "react";
+import React, { Fragment, Component, useState } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import Modal from "react-native-modal";
 
@@ -11,23 +11,19 @@ const postData = async (url, data) => {
 };
 postData('https://example.com/answer', {  });
 
-class SwipeableModal extends Component {
-  state = {
-    visible: false
-  };
+const SwipeableModal = () => {
 
-  openModal = () => this.setState({ visible: true });
-  closeModal = () => this.setState({ visible: false });
+  // onSubmit = () => alert(this.state.data);
+  const [visible, setVisible] = useState(false);
 
-  render() {
     return (
       <Fragment>
         <Modal
-          isVisible={this.state.visible}
+          isVisible={visible}
           backdropOpacity={0.3}
           swipeDirection="left"
-          onSwipeComplete={this.closeModal}
-          onBackdropPress={this.closeModal}
+          onSwipeComplete={()=>setVisible(false)}
+          onBackdropPress={()=>setVisible(false)}
         >
           <View style={styles.modalContainer}>
             <Text style={styles.description}>
@@ -35,14 +31,14 @@ class SwipeableModal extends Component {
             </Text>
             <View style={{flexDirection: 'row'}}>
             <Pressable
-              onPress={this.closeModal}
+              onPress={()=>setVisible(false)}
             >
               
                 <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Đồng ý</Text>
                 
             </Pressable>
             <Pressable
-              onPress={this.closeModal}
+              onPress={()=>setVisible(false)}
             >
               
                 <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Hủy</Text>
@@ -53,13 +49,12 @@ class SwipeableModal extends Component {
         </Modal>
 
         <Pressable
-        onPress={this.openModal}
+        onPress={()=>setVisible(true)}
         style={styles.button}>
           <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Thêm</Text>
         </Pressable>
       </Fragment>
     );
-  }
 }
 
 export default SwipeableModal;

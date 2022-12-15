@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, Fragment } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,6 +8,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DropDownPicker from "react-native-dropdown-picker";
 import {useForm, Controller} from 'react-hook-form';
 import SwipeableModal from "./SwipeableModal";
+import Modal from "react-native-modal";
+
 
 const rooms = [
   { label: "101", value: "101" },
@@ -33,6 +35,52 @@ const AddService = ({ navigation }) => {
   const onTypeOpen = useCallback(() => {
     setRoomOpen(false);
   }, []);
+
+  const SwipeableModal = () => {
+
+    // onSubmit = () => alert(this.state.data);
+    const [visible, setVisible] = useState(false);
+  
+      return (
+        <Fragment>
+          <Modal
+            isVisible={visible}
+            backdropOpacity={0.3}
+            swipeDirection="left"
+            onSwipeComplete={()=>setVisible(false)}
+            onBackdropPress={()=>setVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalDescription}>
+              Bạn có chắc muốn thêm dịch vụ?
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+              <Pressable
+                onPress={()=>setVisible(false)}
+              >
+                
+                  <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Đồng ý</Text>
+                  
+              </Pressable>
+              <Pressable
+                onPress={()=>setVisible(false)}
+              >
+                
+                  <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Hủy</Text>
+                  
+              </Pressable>
+              </View>
+            </View>
+          </Modal>
+  
+          <Pressable
+          onPress={()=> {setVisible(true);}}
+          style={styles.modalButton}>
+            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Thêm</Text>
+          </Pressable>
+        </Fragment>
+      );
+  }
 
   return (
     <View style={styles.container}>
@@ -334,6 +382,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6, 
     marginBottom: 20   
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: "center",
+    backgroundColor: "white",
+    borderRadius: 16,
+    // borderColor: "#C0C0C0",
+    // borderWidth: 2,
+    marginVertical: 350
+  },
+  modalDescription: {
+    // padding: 20,
+    fontSize: 20,
+    marginBottom: 20
+  },
+  modalButton: {
+    width: 370,
+    height: 50,
+    backgroundColor: "#071D92",
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 });
 export default AddService;

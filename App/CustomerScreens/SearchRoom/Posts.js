@@ -82,7 +82,7 @@ const Posts = ({ navigation }) => {
           color="#660B8E"
           style={{ marginRight: 15 }}
         />
-      <Text style={styles.info}>{item.location}</Text>
+      <Text style={styles.address}>{item.location}</Text>
       </View>
       </Pressable>
     )};
@@ -274,6 +274,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     // fontWeight: 'bold',
     marginBottom: 5,
+  },
+  address: {
+    fontSize: 15,
+    // fontWeight: 'bold',
+    // marginBottom: 5,
+    marginRight: 10,
+    width: 310,
+    height: 20
   },
   detailInfo: {
     fontSize: 20,

@@ -63,6 +63,7 @@ const Posts = ({ navigation }) => {
     const resp1 = await fetch("https://tintrott.cleverapps.io/api/room/tus?id=1");
     const data1 = await resp1.json();
     setData1(data1);
+    setPosts(data1);
     setFilterNewData(data1);
 
     const resp2 = await fetch("https://tintrott.cleverapps.io/api/room/tus/no?id=1");
@@ -109,7 +110,7 @@ const Posts = ({ navigation }) => {
           color="#660B8E"
           style={{ marginRight: 15 }}
         />
-      <Text style={styles.info}>{item.address}</Text>
+      <Text style={styles.address}>{item.address}</Text>
       </View>
       </Pressable>
     )};
@@ -311,6 +312,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     // fontWeight: 'bold',
     marginBottom: 5,
+  },
+  address: {
+    fontSize: 15,
+    // fontWeight: 'bold',
+    // marginBottom: 5,
+    marginRight: 10,
+    width: 310,
+    height: 20
   },
   detailInfo: {
     fontSize: 20,

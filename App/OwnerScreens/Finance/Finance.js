@@ -175,7 +175,7 @@ const Finance = ({ navigation }) => {
     </View>
     <View style={styles.title}>
     <Text style={styles.info}>Phòng: {item.room}</Text>
-    <Text style={styles.priceBill}>{item.value}đ</Text>
+    <Text style={styles.priceBill}>{item.price}đ</Text>
     </View>
       <Text style={styles.info}>Loại: Tiền phòng</Text>
       <Text style={styles.info}>Hạn thanh toán: 01/01/2021 - 01/02/2021</Text>
