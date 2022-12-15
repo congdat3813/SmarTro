@@ -49,7 +49,7 @@ export default function App() {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
 
-      <Stack.Screen name="Home" component={OHome} />
+      {/* <Stack.Screen name="Home" component={OHome} />
       <Stack.Screen name="Posts" component={OPosts} />
       <Stack.Screen name="PostInfo" component={OPostInfo} />
       <Stack.Screen name="Rooms" component={ORooms} />
@@ -68,24 +68,21 @@ export default function App() {
       <Stack.Screen name="AddTrouble" component={OAddTrouble} />
     </Stack.Navigator>
   </NavigationContainer>
-  );
+  ); */}
 
-  // return (
-  //   <NavigationContainer>
-  //   <Stack.Navigator screenOptions={{headerShown: false}}>
-  //     <Stack.Screen name="Home" component={CHome} />
-  //     <Stack.Screen name="Bills" component={CBills} />
-  //     <Stack.Screen name="BillInfo" component={CBillInfo} />
-  //     <Stack.Screen name="Services" component={CServices} />
-  //     <Stack.Screen name="AddService" component={CAddService} />
-  //     <Stack.Screen name="Troubles" component={CTroubles} />
-  //     <Stack.Screen name="TroubleInfo" component={CTroubleInfo} />
-  //     <Stack.Screen name="AddTrouble" component={CAddTrouble} />
-  //     <Stack.Screen name="ProfileInfo" component={CProfileInfo} />
-  //     <Stack.Screen name="UpdateProfile" component={CUpdateProfile} />
-  //   </Stack.Navigator>
-  // </NavigationContainer>
-  // );
+       <Stack.Screen name="Home" component={CHome} />
+       <Stack.Screen name="Bills" component={CBills} />
+       <Stack.Screen name="BillInfo" component={CBillInfo} />
+       <Stack.Screen name="Services" component={CServices} />
+       <Stack.Screen name="AddService" component={CAddService} />
+       <Stack.Screen name="Troubles" component={CTroubles} />
+       <Stack.Screen name="TroubleInfo" component={CTroubleInfo} />
+       <Stack.Screen name="AddTrouble" component={CAddTrouble} />
+       <Stack.Screen name="ProfileInfo" component={CProfileInfo} />
+       <Stack.Screen name="UpdateProfile" component={CUpdateProfile} />
+     </Stack.Navigator>
+   </NavigationContainer>
+   );
 }
 
 const styles = StyleSheet.create({
