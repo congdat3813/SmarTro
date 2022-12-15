@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -25,9 +25,30 @@ const DATA1 = [
     description: 'Bóng đèn dài bị cháy.',
     image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
   },
+  {
+    id: "3456",
+    status: "Đã xử lý",
+    room: 102,
+    type: 'Hỏng đèn',
+    date: '01/01/2022',
+    description: 'Bóng đèn dài bị cháy.',
+    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
+  },
 ];
 
 const Troubles = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/incident?id=1&type=1");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+
   const [status, setStatus] = useState("Đang đợi xử lý");
   const [statusColor, setStatusColor] = useState("#F2BF00");
   const Trouble = ({ item }) => {

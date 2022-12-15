@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,21 +23,18 @@ const DATA1 = [
     title: "Bảo vệ",
     icon: "user-shield",
     color: "#071D92",
-    name: "Room",
   },
   {
     id: "2",
     title: "Wifi",
     icon: "wifi",
     color: "#071D92",
-    name: "Tenant",
   },
   {
     id: "3",
     title: "Rác",
     icon: "trash",
     color: "#071D92",
-    name: "Finance",
   },
 ];
 
@@ -50,9 +47,6 @@ const Services = ({ navigation }) => {
   }, []);
   const Item = ({ item }) => (
     <Pressable
-      onPress={() => 
-        navigation.navigate(item.name)
-      }
       style={() => [
         {
           backgroundColor: "white",

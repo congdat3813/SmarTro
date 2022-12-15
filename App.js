@@ -12,8 +12,10 @@ import SplashScreen from './Screens/Auth/SplashScreen';
 import OHome from './App/OwnerScreens/Home';
 import OPosts from './App/OwnerScreens/PostRoom/Posts';
 import OPostInfo from './App/OwnerScreens/PostRoom/PostInfo';
+import OAddPost from './App/OwnerScreens/PostRoom/AddPost';
 import ORooms from './App/OwnerScreens/Room/Rooms';
 import ORoomInfo from './App/OwnerScreens/Room/RoomInfo';
+import OAddRoom from './App/OwnerScreens/Room/AddRoom';
 import OTenants from './App/OwnerScreens/Tenant/Tenants';
 import OTenantInfo from './App/OwnerScreens/Tenant/TenantInfo';
 import OFinance from "./App/OwnerScreens/Finance/Finance";
@@ -28,6 +30,9 @@ import OTroubleInfo from './App/OwnerScreens/Trouble/TroubleInfo';
 import OAddTrouble from './App/OwnerScreens/Trouble/AddTrouble';
 
 import CHome from './App/CustomerScreens/Home';
+import CPosts from './App/CustomerScreens/SearchRoom/Posts';
+import CPostInfo from './App/CustomerScreens/SearchRoom/PostInfo';
+import CRoomInfo from './App/CustomerScreens/Room/RoomInfo';
 import CBills from './App/CustomerScreens/Bill/Bills';
 import CBillInfo from './App/CustomerScreens/Bill/BillInfo';
 import CServices from './App/CustomerScreens/Service/Services';
@@ -35,6 +40,7 @@ import CAddService from './App/CustomerScreens/Service/AddService';
 import CTroubles from './App/CustomerScreens/Trouble/Troubles';
 import CTroubleInfo from './App/CustomerScreens/Trouble/TroubleInfo';
 import CAddTrouble from './App/CustomerScreens/Trouble/AddTrouble';
+import CSavedPosts from './App/CustomerScreens/SavedPosts/SavedPosts';
 import CProfileInfo from './App/CustomerScreens/Profile/ProfileInfo';
 import CUpdateProfile from './App/CustomerScreens/Profile/UpdateProfile';
 
@@ -52,8 +58,10 @@ export default function App() {
       {/* <Stack.Screen name="Home" component={OHome} />
       <Stack.Screen name="Posts" component={OPosts} />
       <Stack.Screen name="PostInfo" component={OPostInfo} />
+      <Stack.Screen name="AddPost" component={OAddPost} />
       <Stack.Screen name="Rooms" component={ORooms} />
       <Stack.Screen name="RoomInfo" component={ORoomInfo} />
+      <Stack.Screen name="AddRoom" component={OAddRoom} />
       <Stack.Screen name="Tenants" component={OTenants} />
       <Stack.Screen name="TenantInfo" component={OTenantInfo} />
       <Stack.Screen name="Finance" component={OFinance} />

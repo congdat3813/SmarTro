@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';

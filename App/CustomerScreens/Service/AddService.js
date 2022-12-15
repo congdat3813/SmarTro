@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -158,7 +158,7 @@ const AddService = ({ navigation }) => {
       />
 
         <Pressable style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16}}>Thêm</Text>
+          <Text style={{color: 'white', fontSize: 16}}>Đăng ký</Text>
         </Pressable>
 
         {/* <TextInput

@@ -62,10 +62,17 @@ const Tenants = ({ navigation }) => {
       setFilterNewData(data);
     }
   };
+
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/tenant?id=1");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
   useEffect(() => {
-    setData(DATA1);
-    setFilterNewData(DATA1);
-  }, []);
+    fetchData();
+  },[]);
+
 
   const Tenant = ({ item }) => {
     return (
@@ -106,7 +113,7 @@ const Tenants = ({ navigation }) => {
       <Text style={styles.id}>{item.name}</Text>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Số điện thoại: {item.phone}</Text>
-      <Text style={styles.info}>Thuê từ: {item.startDate}</Text>
+      <Text style={styles.info}>Thuê từ: {item.time}</Text>
       </View>
     </Pressable>
     )};

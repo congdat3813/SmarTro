@@ -1,12 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DropDownPicker from "react-native-dropdown-picker";
 import {useForm, Controller} from 'react-hook-form';
+import SwipeableModal from "./SwipeableModal";
 
 const rooms = [
   { label: "101", value: "101" },
@@ -134,9 +135,7 @@ const AddService = ({ navigation }) => {
         )}
       />
 
-        <Pressable style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16}}>Thêm</Text>
-        </Pressable>
+        <SwipeableModal />
 
         {/* <TextInput
         style={styles.input}

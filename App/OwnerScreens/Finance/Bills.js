@@ -38,10 +38,20 @@ const DATA1 = [
 ];
 
 const Bills = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all?id=1");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
   const [status, setStatus] = useState("Chưa thanh toán");
   const [statusColor, setStatusColor] = useState("#F2BF00");
 
-  const [data, setData] = useState([]);
   const [filterdata, setFilterNewData] = useState();
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = (query) => {

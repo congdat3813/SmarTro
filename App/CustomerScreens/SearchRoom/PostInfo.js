@@ -1,11 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import {
-  FlatList,
   Pressable,
   StyleSheet,
   Text,
   View,
   Image,
+  Alert,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,19 +14,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SwipeableModal from "./SwipeableModal";
 
 const PostInfo = ({ navigation, route: { params } }) => {
-  // const {item} = params;
-  const [item, setItem] = useState({});
-  const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/room/tus/1");
-    const data = await resp.json();
-    setItem(data);
-    setFilterNewData(data);
-  };
-  useEffect(() => {
-    fetchData();
-  },[]);
+  const {item} = params;
+  const [modalVisible, setModalVisible] = useState(false);
+  const showToast = () => {
+    ToastAndroid.show('Request sent successfully!', ToastAndroid.SHORT);
+  }
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -36,7 +32,7 @@ const PostInfo = ({ navigation, route: { params } }) => {
           <View style={styles.headerBarTitle}>
           <Pressable
       onPress={() => 
-        navigation.navigate('Posts')
+        navigation.pop()
       }
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
@@ -55,8 +51,9 @@ const PostInfo = ({ navigation, route: { params } }) => {
       />  
 
           <View style={styles.infoTag}>
-          <Text style={styles.detailInfo}>Địa chỉ: {item.address}</Text>
-          <Text style={styles.detailInfo}>Ngày đăng: {item.time}</Text>
+          <Text style={styles.detailInfo}>Địa chỉ: 162 Lê Quý Đôn, Tân Lập,
+Đông Hòa, Dĩ An, Bình Dương</Text>
+          <Text style={styles.detailInfo}>Ngày đăng: 20/11/2022</Text>
           <View style={{flexDirection: 'row'}}>
           <Image
         style={styles.smallImage}
@@ -65,8 +62,8 @@ const PostInfo = ({ navigation, route: { params } }) => {
         }}
       />  
             <View>
-              <Text style={styles.detailInfo}>{item.userName}</Text>
-              <Text style={styles.detailInfo}>Số điện thoại: {item.phone}</Text>
+              <Text style={styles.detailInfo}>Dương Bá Tình</Text>
+              <Text style={styles.detailInfo}>Số điện thoại: 03030303</Text>
               <View style={{flexDirection: 'row'}}>
               <Text style={styles.detailInfo}>Đánh giá: </Text>
               <FontAwesome name="star" size={24} color="#F2BF00" />
@@ -82,8 +79,14 @@ const PostInfo = ({ navigation, route: { params } }) => {
           <Text style={styles.header}>Mô tả</Text>
 
           <View style={styles.descriptionTag}>
-            <Text style={{fontSize: 20}}>{item.note}</Text>
+            <Text style={{fontSize: 20}}>{item.description}</Text>
           </View>
+          {/* <Pressable
+      onPress={showToast}
+        style={styles.button}>
+          <Text style={{color: 'white', fontSize: 16,  fontWeight: 'bold'}}>Lưu bài đăng</Text>
+        </Pressable> */}
+        <SwipeableModal />
         </View>
       </LinearGradient>
     </View>
@@ -298,7 +301,58 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     paddingLeft: 15,
     paddingRight: 15,
-    paddingTop: 15
+    paddingTop: 15,
+    marginBottom: 15
   },
+  button: {
+    width: 370,
+    height: 50,
+    backgroundColor: "#660B8E",
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  buttonModal: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
 export default PostInfo;

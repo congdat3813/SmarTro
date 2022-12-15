@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput, Image } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -108,6 +108,15 @@ const DATA1 = [
 
 const Rooms = ({ navigation }) => {
   const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/room?id=1");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);  
   const [filterdata, setFilterNewData] = useState();
   const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = (query) => {
@@ -121,7 +130,7 @@ const Rooms = ({ navigation }) => {
       });
       setFilterNewData(newData);
       console.log('newData',filterdata);
-      
+    
     }
     else{
       setFilterNewData(data);
@@ -164,8 +173,8 @@ const Rooms = ({ navigation }) => {
 
       <Text style={styles.id}>Phòng {item.room}</Text>
       <Text style={styles.info}>Giá: {item.price}đ</Text>
-      <Text style={styles.info}>Khách thuê: {item.hired}/{item.number}</Text>
-      <Text style={styles.info}>Thuê từ: {item.startDate}</Text>
+      <Text style={styles.info}>Khách thuê: {item.numRents}/{item.numberOfTenants}</Text>
+      <Text style={styles.info}>Thuê từ: {item.rentFrom}</Text>
       </View>
     </Pressable>
     )};
@@ -194,9 +203,19 @@ const renderRoom = ({ item }) => {
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable>  
+    <Pressable
+      onPress={() => 
+        navigation.navigate('AddRoom')
+      }
+    >
+      <FontAwesome5 name='plus-circle' size={30} color='#660B8E' style={{marginRight: 15}}/>
+    </Pressable>   
+
+
           </View>
           <Text style={styles.headerText}>Phòng cho thuê</Text>
         </View>
+
         <View style={styles.body}>
 
 <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'center'}}>
@@ -273,6 +292,7 @@ const styles = StyleSheet.create({
   },
   headerBarTitle: {
     alignItems: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     // position: 'absolute',
     marginBottom: 10,
