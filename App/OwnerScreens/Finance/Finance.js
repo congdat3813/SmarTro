@@ -1,72 +1,94 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import moment from 'moment';
 
-const data1 = [
-  {
-    id: "1234",
-    room: 101,
-    type: 'Tiền phòng',
-    group: 'Thu',
-    value: 733333,
-    user: 'Nguyễn Văn A'
-  },
-  {
-    id: "2345",
-    room: 102,
-    type: 'Tiền phòng',
-    group: 'Thu',
-    value: 733333,
-    user: 'Nguyễn Văn B'
-  },
-  {
-    id: "3456",
-    room: 102,
-    type: 'Tiền phòng',
-    group: 'Thu',
-    value: 733333,
-    user: 'Nguyễn Văn C'
-  },
-];
+// const data1 = [
+//   {
+//     id: "1234",
+//     room: 101,
+//     type: 'Tiền phòng',
+//     group: 'Thu',
+//     value: 733333,
+//     user: 'Nguyễn Văn A'
+//   },
+//   {
+//     id: "2345",
+//     room: 102,
+//     type: 'Tiền phòng',
+//     group: 'Thu',
+//     value: 733333,
+//     user: 'Nguyễn Văn B'
+//   },
+//   {
+//     id: "3456",
+//     room: 102,
+//     type: 'Tiền phòng',
+//     group: 'Thu',
+//     value: 733333,
+//     user: 'Nguyễn Văn C'
+//   },
+// ];
 
-const data2 = [
-  {
-    id: "1234",
-    status: 'Chưa thanh toán',
-    room: 101,
-    type: 'Tiền phòng',
-    value: 733333,
-    startDate: '01/01/2021',
-    endDate: '01/02/2021'
-  },
-  {
-    id: "2345",
-    status: 'Đã thanh toán',
-    room: 102,
-    type: 'Tiền phòng',
-    value: 733333,
-    startDate: '01/01/2021',
-    endDate: '01/02/2021'
-  },
-  {
-    id: "3456",
-    status: 'Trễ hạn',
-    room: 103,
-    type: 'Tiền phòng',
-    value: 733333,
-    startDate: '01/01/2021',
-    endDate: '01/02/2021'
-  },
-];
-
-const DATA1 = [data1[0], data1[1]];
-const DATA2 = [data2[0], data2[1]];
+// const data2 = [
+//   {
+//     id: "1234",
+//     status: 'Chưa thanh toán',
+//     room: 101,
+//     type: 'Tiền phòng',
+//     value: 733333,
+//     startDate: '01/01/2021',
+//     endDate: '01/02/2021'
+//   },
+//   {
+//     id: "2345",
+//     status: 'Đã thanh toán',
+//     room: 102,
+//     type: 'Tiền phòng',
+//     value: 733333,
+//     startDate: '01/01/2021',
+//     endDate: '01/02/2021'
+//   },
+//   {
+//     id: "3456",
+//     status: 'Trễ hạn',
+//     room: 103,
+//     type: 'Tiền phòng',
+//     value: 733333,
+//     startDate: '01/01/2021',
+//     endDate: '01/02/2021'
+//   },
+// ];
 
 const Finance = ({ navigation }) => {
+  const [bills, setBills] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+
+  const fetchData1 = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/revenue/all?id=1");
+    const data = await resp.json();
+    // setData1(data);
+    setTransactions([data[0], data[1]]);
+    // setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData1();
+  },[]);
+
+  const fetchData2 = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill?id=1");
+    const data = await resp.json();
+    // setData2(data);
+    setBills([data[0], data[1]]);
+    // setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData2();
+  },[]);
 
   const Transaction = ({ item }) => {
     const sign = (item.group == 'Thu')? '+' : '-';
@@ -97,8 +119,8 @@ const Finance = ({ navigation }) => {
       ]}
     >
       <View style={styles.title}>
-        <Text style={styles.id}>#{item.id}</Text>
-        <Text style={styles.price}>{sign}{item.value}đ</Text>
+        <Text style={styles.id}>{item.code}</Text>
+        <Text style={styles.price}>{sign}{item.price}đ</Text>
       </View>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Loại: {item.type}</Text>
@@ -142,7 +164,7 @@ const Finance = ({ navigation }) => {
       ]}
     >
       <View style={styles.title}>
-      <Text style={styles.id}>#{item.id}</Text>
+      <Text style={styles.id}>{item.code}</Text>
       <Text style={{
     fontSize: 15,
     fontStyle: "italic",
@@ -193,7 +215,7 @@ const Finance = ({ navigation }) => {
         <View style={styles.body}>
         <Text style={styles.header}>Thu chi</Text>
         <FlatList
-          data={DATA1}
+          data={transactions}
           renderItem={renderTransaction}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -209,7 +231,7 @@ const Finance = ({ navigation }) => {
 
         <Text style={styles.header}>Hóa đơn</Text>
         <FlatList
-          data={DATA2}
+          data={bills}
           renderItem={renderBill}
           keyExtractor={(item) => item.id}
           style={styles.list}

@@ -1,13 +1,38 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SwipeableModal1 from "./SwipeableModal1";
+import SwipeableModal2 from "./SwipeableModal2";
+import moment from 'moment';
 
 const TroubleInfo = ({ navigation, route: { params } }) => {
-  const {item} = params;
+  const processingBtn = () => ( 
+  <SwipeableModal1 /> 
+  );
+
+  const processedBtn = () => (
+  <SwipeableModal2 />
+  );
+
+  const [item, setItem] = useState({});
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/incident/" + params.item.id);
+    const data = await resp.json();
+    setItem(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },{});
+  // const {item} = params;
+  const [content, setContent] = useState(
+    item.status == "Đang đợi xử lý"? processingBtn : (item.status == "Đang xử lý"? processedBtn : null)
+  );
+  // setContent(item.status == "Đang đợi xử lý"? processingBtn : (item.status == "Đang xử lý"? processedBtn : null));
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -49,11 +74,11 @@ const TroubleInfo = ({ navigation, route: { params } }) => {
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Ngày báo cáo</Text>
-            <Text style={styles.price}>{item.date}</Text>
+            <Text style={styles.price}>{moment(item.time).format('DD/MM/YYYY')}</Text>
           </View>
 
             <Text style={styles.detailInfo}>Mô tả</Text>
-            <Text style={styles.description}>{item.description}</Text>
+            <Text style={styles.description}>{item.note}</Text>
 
         </View>
         <Text style={styles.header}>Hình ảnh</Text>
@@ -63,9 +88,10 @@ const TroubleInfo = ({ navigation, route: { params } }) => {
           uri: item.image,
         }}
       />  
-        <Pressable style={styles.button}>
+        {/* <Pressable style={styles.button}>
           <Text style={{color: 'white', fontSize: 16,  fontWeight: 'bold'}}>Đã xử lý</Text>
-        </Pressable>
+        </Pressable> */}
+        <View>{content}</View>
 
         {/* <TextInput
         style={styles.input}

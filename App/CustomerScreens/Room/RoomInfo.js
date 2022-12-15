@@ -13,53 +13,78 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import moment from 'moment';
 
 const RoomInfo = ({ navigation, route: { params } }) => {
-  // const params;
+  // const item =   {
+  //   id: "1",
+  //   room: 101,
+  //   area: 45,
+  //   price: 3000000,
+  //   hired: 0,
+  //   number: 3,
+  //   startDate: '--/--/----',
+  //   subject: 'Nam, Nữ',
+  //   services: [
+  //     {
+  //       service: 'Wifi',
+  //       price: 150000,
+  //     },
+  //     {
+  //       service: 'Rác',
+  //       price: 20000,
+  //     },
+  //   ],
+  //   image: 'https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg',
+  //   tenants: [
+  //     {
+  //       id: "215529249",
+  //       name: 'Nguyễn Văn A',
+  //       phone: '0123456789',
+  //       email: 'nva@gmail.com',
+  //       DoB: '05/01/2001',
+  //       room: 101,
+  //       startDate: '01/01/2021',
+  //       image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  //     },
+  //     {
+  //       id: "052201008697",
+  //       name: 'Nguyễn Văn B',
+  //       phone: '0123456789',
+  //       email: 'nvb@gmail.com',
+  //       DoB: '05/02/2001',
+  //       room: 102,
+  //       startDate: '01/02/2021',
+  //       image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  //     },
+  //     {
+  //       id: "052201008699",
+  //       name: 'Nguyễn Văn C',
+  //       phone: '0123456789',
+  //       email: 'nvc@gmail.com',
+  //       DoB: '05/03/2001',
+  //       room: 103,
+  //       startDate: '01/03/2021',
+  //       image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  //     },
+  //   ]
+  // };
   const [item, setItem] = useState({});
-
-  useEffect(() => {
-    // const data=fetchData();
-    // console.log(data);
-    // setItem(data);
-    const fetchData = async () => {
-      // console.log("ITEM ID:", params.item.id)
-      const resp = await fetch("https://tintrott.cleverapps.io/api/room/" + params.item.id);
-      const data = await resp.json();
-      console.log(data);
-      setItem(data);
-      console.log(item);
-      // console.log(data);
-      // console.log(item);
-      // return data;
-      // setFilterNewData(data);
-    };
-    fetchData();
-    // console.log(item);
-  },{});
-
-  console.log(item);
-
-  const [data, setData] = useState([]);
-  const fetchData1 = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/tenant/room?id=1");
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all/" + params.item.id);
     const data = await resp.json();
-    setData(data);
+    setItem(data);
     setFilterNewData(data);
   };
   useEffect(() => {
-    fetchData1();
-  },[]);
-
+    fetchData();
+  },{});
   const [status, setStatus] = useState(true);
-  // const {item} = params;
   const [content, setContent] = useState(
       <View>
       <View style={styles.infoTag}>
               <View style={styles.title}>
                   <Text style={styles.detailInfo}>Phòng</Text>
-                  <Text style={styles.price}>{item.name}</Text>
+                  <Text style={styles.price}>{item.room}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Diện tích</Text>
@@ -71,15 +96,15 @@ const RoomInfo = ({ navigation, route: { params } }) => {
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Khách thuê</Text>
-                  <Text style={styles.price}>{item.numRents}/{item.numberOfTenants}</Text>
+                  <Text style={styles.price}>{item.hired}/{item.number}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Thuê từ</Text>
-                  <Text style={styles.price}>{moment(item.rentFrom).format('DD/MM/YYYY')}</Text>
+                  <Text style={styles.price}>{item.startDate}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Đối tượng</Text>
-                  <Text style={styles.price}>{item.sex}</Text>
+                  <Text style={styles.price}>{item.subject}</Text>
                 </View>
       
               </View>
@@ -88,7 +113,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       
                 <View style={styles.descriptionTag}>
                 <FlatList
-                data={item.serviceIList}
+                data={item.services}
                 renderItem={renderService}
                 // keyExtractor={(item) => item.id}
                 style={{}}
@@ -100,9 +125,9 @@ const RoomInfo = ({ navigation, route: { params } }) => {
   const Tenant = ({ item }) => {
     return (
       <Pressable
-      onPress={() =>
-        navigation.navigate('TenantInfo', {item, fromTenants: false})
-      }    
+      // onPress={() =>
+      //   navigation.navigate('TenantInfo', {item, fromTenants: false})
+      // }    
       style={({ pressed }) => [
         {
           backgroundColor: pressed ? "#F3E8FF" : "white",
@@ -136,7 +161,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       <Text style={styles.id}>{item.name}</Text>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Số điện thoại: {item.phone}</Text>
-      <Text style={styles.info}>Thuê từ: {moment(item.rentFrom).format('DD/MM/YYYY')}</Text>
+      <Text style={styles.info}>Thuê từ: {item.startDate}</Text>
       </View>
     </Pressable>
     )};
@@ -153,7 +178,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
   const renderService = ({ item }) => {
     return (
       <View style={styles.title}>
-      <Text style={styles.detailInfo}>{item.name}</Text>
+      <Text style={styles.detailInfo}>{item.service}</Text>
       <Text style={styles.price}>{item.price}đ</Text>
     </View>
     );
@@ -168,7 +193,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
           <View style={styles.headerBarTitle}>
           <Pressable
       onPress={() => 
-        navigation.navigate('Rooms')
+        navigation.navigate('Home')
       }
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
@@ -193,7 +218,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       <View style={styles.infoTag}>
               <View style={styles.title}>
                   <Text style={styles.detailInfo}>Phòng</Text>
-                  <Text style={styles.price}>{item.name}</Text>
+                  <Text style={styles.price}>{item.room}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Diện tích</Text>
@@ -205,15 +230,15 @@ const RoomInfo = ({ navigation, route: { params } }) => {
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Khách thuê</Text>
-                  <Text style={styles.price}>{item.numRents}/{item.numberOfTenants}</Text>
+                  <Text style={styles.price}>{item.hired}/{item.number}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Thuê từ</Text>
-                  <Text style={styles.price}>{moment(item.rentFrom).format('DD/MM/YYYY')}</Text>
+                  <Text style={styles.price}>{item.startDate}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Đối tượng</Text>
-                  <Text style={styles.price}>{item.sex}</Text>
+                  <Text style={styles.price}>{item.subject}</Text>
                 </View>
       
               </View>
@@ -222,7 +247,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       
                 <View style={styles.descriptionTag}>
                 <FlatList
-                data={item.serviceIList}
+                data={item.services}
                 renderItem={renderService}
                 // keyExtractor={(item) => item.id}
                 style={{}}
@@ -239,7 +264,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
     setStatus(false);
     setContent(
       <FlatList
-          data={data}
+          data={item.tenants}
           renderItem={renderTenant}
           keyExtractor={(item) => item.id}
           style={styles.list}

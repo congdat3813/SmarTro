@@ -1,14 +1,28 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SwipeableModal1 from "./SwipeableModal1";
+import SwipeableModal2 from "./SwipeableModal2";
+import moment from 'moment';
 
 const BillInfo = ({ navigation, route: { params } }) => {
-  const {item, fromFinance} = params;
-  const backPage = fromFinance? 'Finance' : 'Bills';
+  const [item, setItem] = useState({});
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all/" + params.item.id);
+    const data = await resp.json();
+    setItem(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },{});
+
+  // const {item, fromFinance} = params;
+  // const backPage = fromFinance? 'Finance' : 'Bills';
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -19,7 +33,7 @@ const BillInfo = ({ navigation, route: { params } }) => {
           <View style={styles.headerBarTitle}>
           <Pressable
       onPress={() => 
-        navigation.navigate(backPage)
+        navigation.pop()
       }
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
@@ -31,7 +45,7 @@ const BillInfo = ({ navigation, route: { params } }) => {
 
         <View style={styles.infoTag}>
         <View style={styles.title}>
-      <Text style={styles.id}>#{item.id}</Text>
+      <Text style={styles.id}>{item.code}</Text>
       <Text style={{
     fontSize: 15,
     fontStyle: "italic",
@@ -51,11 +65,11 @@ const BillInfo = ({ navigation, route: { params } }) => {
 
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Tổng cộng</Text>
-            <Text style={styles.price}>{item.value}đ</Text>
+            <Text style={styles.price}>{item.price}đ</Text>
           </View>
 
             <Text style={styles.detailInfo}>Hạn thanh toán</Text>
-            <Text style={styles.description}>{item.startDate} - {item.endDate}</Text>
+            <Text style={styles.description}>{moment(item.startTime).format('DD/MM/YYYY')} - {moment(item.endTime).format('DD/MM/YYYY')}</Text>
 
         </View>
 
@@ -68,15 +82,9 @@ const BillInfo = ({ navigation, route: { params } }) => {
 
         <View style={styles.buttons}>
 
-        <Pressable style={styles.yellowButton}>
-          <Text style={{color: 'black', fontSize: 15, fontWeight: 'bold'}}>Chỉnh sửa</Text>
-        </Pressable>
-        <Pressable style={styles.blueButton}>
-          <Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Thanh toán</Text>
-        </Pressable>
-        <Pressable style={styles.redButton}>
-          <Text style={{color: 'white', fontSize: 15, fontWeight: 'bold'}}>Xóa</Text>
-        </Pressable>
+        <SwipeableModal1 />
+        <SwipeableModal2 />
+
         </View>
         </View>
 
@@ -218,16 +226,16 @@ const styles = StyleSheet.create({
     marginRight: 15
   },
   blueButton: {
-    width: 135,
+    width: 175,
     height: 50,
     backgroundColor: "#071D92",
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 15
+    marginRight: 20
   },
   redButton: {
-    width: 80,
+    width: 175,
     height: 50,
     backgroundColor: "#BD0000",
     borderRadius: 6,

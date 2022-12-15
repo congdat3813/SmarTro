@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -17,7 +17,8 @@ const rooms = [
   { label: "203", value: "203" },
 ];
 
-const UpdateProfile = ({ navigation }) => {
+const UpdateProfile = ({ navigation, route: { params } }) => {
+  const {item} = params;
   const { handleSubmit, control } = useForm();
 
   return (
@@ -44,7 +45,7 @@ const UpdateProfile = ({ navigation }) => {
 {/* <View style={{flexDirection: 'row'}}> */}
 <Controller
         name="name"
-        defaultValue=""
+        defaultValue={item.name}
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextInput
@@ -60,7 +61,7 @@ const UpdateProfile = ({ navigation }) => {
 {/* <View style={{flexDirection: 'row'}}> */}
 <Controller
         name="phone"
-        defaultValue=""
+        defaultValue={item.phone}
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextInput
@@ -76,7 +77,7 @@ const UpdateProfile = ({ navigation }) => {
 {/* <View style={{flexDirection: 'row'}}> */}
 <Controller
         name="email"
-        defaultValue=""
+        defaultValue={item.email}
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextInput
@@ -92,7 +93,7 @@ const UpdateProfile = ({ navigation }) => {
 {/* <View style={{flexDirection: 'row'}}> */}
 <Controller
         name="id"
-        defaultValue=""
+        defaultValue={item.cccd}
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextInput
@@ -108,7 +109,7 @@ const UpdateProfile = ({ navigation }) => {
 {/* <View style={{flexDirection: 'row'}}> */}
 <Controller
         name="DoB"
-        defaultValue=""
+        defaultValue={item.birthday}
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextInput

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -25,10 +25,31 @@ const DATA1 = [
     description: 'Bóng đèn dài bị cháy.',
     image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
   },
+  {
+    id: "3456",
+    status: "Đã xử lý",
+    room: 102,
+    type: 'Hỏng đèn',
+    date: '01/01/2022',
+    description: 'Bóng đèn dài bị cháy.',
+    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
+  },
 ];
 
 const Troubles = ({ navigation }) => {
-  const [status, setStatus] = useState("Đang đợi xử lý");
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/incident?id=2");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+  const [status, setStatus] = useState(0);
+  const [stt, setStt] = useState("Đang đợi xử lý");
   const [statusColor, setStatusColor] = useState("#F2BF00");
   const Trouble = ({ item }) => {
     return (
@@ -124,32 +145,35 @@ const Troubles = ({ navigation }) => {
 
         <Pressable
           onPress={() => {
-            setStatus("Đang đợi xử lý");
+            setStatus(0);
+            setStt("Đang đợi xử lý");
             setStatusColor("#F2BF00");
           }}
-          style={(status == "Đang đợi xử lý")? styles.yellowButton : styles.yellowButtonOutline}>
-          <Text style={(status == "Đang đợi xử lý")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Đang đợi xử lý</Text>
+          style={(status == 0)? styles.yellowButton : styles.yellowButtonOutline}>
+          <Text style={(status == 0)? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Đang đợi xử lý</Text>
         </Pressable>
         <Pressable
           onPress={() => {
-            setStatus("Đang xử lý");
+            setStatus(1);
+            setStt("Đang xử lý");
             setStatusColor("#071D92");
           }}
-          style={(status == "Đang xử lý")? styles.blueButton : styles.blueButtonOutline}>
-          <Text style={(status == "Đang xử lý")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đang xử lý</Text>
+          style={(status == 1)? styles.blueButton : styles.blueButtonOutline}>
+          <Text style={(status == 1)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đang xử lý</Text>
         </Pressable>
         <Pressable
           onPress={() => {
-            setStatus("Đã xử lý");
+            setStatus(2);
+            setStt("Đã xử lý");
             setStatusColor("#0BA108");
           }}
-          style={(status == "Đã xử lý")? styles.greenButton : styles.greenButtonOutline}>
-          <Text style={(status == "Đã xử lý")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#0BA108", fontSize: 15, fontWeight: 'bold'}}>Đã xử lý</Text>
+          style={(status == 2)? styles.greenButton : styles.greenButtonOutline}>
+          <Text style={(status == 2)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#0BA108", fontSize: 15, fontWeight: 'bold'}}>Đã xử lý</Text>
         </Pressable>
         </View>
 
         <FlatList
-          data={DATA1.filter(item => item.status == status)}
+          data={data.filter(item => item.status == stt)}
           renderItem={renderTrouble}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -261,7 +285,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 15,
     borderWidth: 2,
-    borderColor: '#660B8E',
+    borderColor: '#660B8E'
   },
   largeImage: {
     width: 370,

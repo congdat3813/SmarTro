@@ -1,38 +1,49 @@
 import { StatusBar } from "expo-status-bar";
-import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState, useEffect } from "react";
+import { FlatList, Pressable, StyleSheet, Text, View, Image, Alert, TextInput } from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SwipeableModal1 from "./SwipeableModal1";
-import SwipeableModal2 from "./SwipeableModal2";
-import moment from 'moment';
+import DropDownPicker from "react-native-dropdown-picker";
+import {useForm, Controller} from 'react-hook-form';
+// import * as ImagePicker from 'expo-image-picker';
+// import Button from "./Button";
+// import ImageViewer from "./ImageViewer";
 
-const TroubleInfo = ({ navigation, route: { params } }) => {
-  const processingBtn = () => ( 
-  <SwipeableModal1 /> 
-  );
+const rooms = [
+  { label: "101", value: "101" },
+  { label: "102", value: "102" },
+  { label: "103", value: "103" },
+  { label: "201", value: "201" },
+  { label: "202", value: "202" },
+  { label: "203", value: "203" },
+];
 
-  const processedBtn = () => (
-  <SwipeableModal2 />
-  );
+const AddPost = ({ navigation }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const [item, setItem] = useState({});
-  const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/incident/" + params.item.id);
-    const data = await resp.json();
-    setItem(data);
-    setFilterNewData(data);
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setSelectedImage(result.assets[0].uri);
+    } else {
+      alert("You did not select any image.");
+    }
   };
-  useEffect(() => {
-    fetchData();
-  },{});
-  // const {item} = params;
-  const [content, setContent] = useState(
-    item.status == "Đang đợi xử lý"? processingBtn : (item.status == "Đang xử lý"? processedBtn : null)
-  );
-  // setContent(item.status == "Đang đợi xử lý"? processingBtn : (item.status == "Đang xử lý"? processedBtn : null));
+
+  const PlaceholderImage = require('../../../assets/logo.png');
+
+  const { handleSubmit, control } = useForm();
+  const [genderOpen, setGenderOpen] = useState(false);
+  const [genderValue, setGenderValue] = useState(null);
+  const [gender, setGender] = useState(rooms);
+  const onGenderOpen = useCallback(() => {
+  }, []);
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -43,55 +54,54 @@ const TroubleInfo = ({ navigation, route: { params } }) => {
           <View style={styles.headerBarTitle}>
           <Pressable
       onPress={() => 
-        navigation.navigate('Troubles')
+        navigation.pop()
       }
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable>
     </View>
-          <Text style={styles.headerText}>Thông tin sự cố</Text>
+          <Text style={styles.headerText}>Đăng phòng</Text>
         </View>
         <View style={styles.body}>
 
-        <View style={styles.infoTag}>
-        <View style={styles.title}>
-      <Text style={styles.id}>#{item.id}</Text>
-      <Text style={{
-    fontSize: 15,
-    fontStyle: "italic",
-    fontWeight: 'bold',
-    // marginBottom: 5,
-    color: (item.status == 'Đang đợi xử lý')? '#F2BF00' : ((item.status == 'Đã xử lý')? '#0BA108' : '#071D92')
-  }}>{item.status}</Text>
-    </View>
+        {/* <View style={styles.infoTag}>
+        <Text style={styles.id}>#1234</Text>
         <View style={styles.title}>
             <Text style={styles.detailInfo}>Phòng</Text>
-            <Text style={styles.price}>{item.room}</Text>
+            <Text style={styles.price}>101</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Sự cố</Text>
-            <Text style={styles.price}>{item.type}</Text>
+            <Text style={styles.price}>Hỏng đèn</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Ngày báo cáo</Text>
-            <Text style={styles.price}>{moment(item.time).format('DD/MM/YYYY')}</Text>
+            <Text style={styles.price}>01/01/2022</Text>
           </View>
 
             <Text style={styles.detailInfo}>Mô tả</Text>
-            <Text style={styles.description}>{item.note}</Text>
+            <Text style={styles.description}>Bóng đèn dài bị vỡ.</Text>
 
-        </View>
-        <Text style={styles.header}>Hình ảnh</Text>
-        <Image
-        style={styles.largeImage}
-        source={{
-          uri: item.image,
-        }}
-      />  
-        {/* <Pressable style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16,  fontWeight: 'bold'}}>Đã xử lý</Text>
-        </Pressable> */}
-        <View>{content}</View>
+        </View> */}
+        <Text style={styles.header}>Mô tả</Text>
+        <Controller
+        name="note"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            style={styles.input}
+            selectionColor={"#5188E3"}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+      />
+
+        <Pressable style={styles.button}>
+          <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Đăng</Text>
+        </Pressable>
+
 
         {/* <TextInput
         style={styles.input}
@@ -209,8 +219,6 @@ const styles = StyleSheet.create({
     width: 370,
     height: 370,
     borderRadius: 16,
-    borderWidth: 2,
-    borderColor: '#660B8E',
     shadowOffset: {
       width: 9,
       height: 9,
@@ -254,7 +262,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    padding: 10,
+    padding: 15,
+    marginBottom: 20
   },
   yellowButton: {
     width: 135,
@@ -317,6 +326,36 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     marginBottom: 10
-  }
+  },
+  dropdownSection: {
+    zIndex: 10,
+    borderWidth: 0,
+    borderRadius: 16,
+  },
+  dropdown: {
+    zIndex: 10,
+    borderWidth: 0,
+    borderRadius: 16,
+    shadowOffset: {
+      width: 9,
+      height: 9,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6, 
+    marginBottom: 20   
+  },
+  imagePicker: {
+    flex: 1,
+    backgroundColor: '#25292e',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    flex:1, 
+    paddingTop: 58
+  },
+  footerContainer: {
+    flex: 1 / 3,
+    alignItems: 'center',
+  },
 });
-export default TroubleInfo;
+export default AddPost;

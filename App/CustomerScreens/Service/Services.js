@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,21 +23,18 @@ const DATA1 = [
     title: "Bảo vệ",
     icon: "user-shield",
     color: "#071D92",
-    name: "Room",
   },
   {
     id: "2",
     title: "Wifi",
     icon: "wifi",
     color: "#071D92",
-    name: "Tenant",
   },
   {
     id: "3",
     title: "Rác",
     icon: "trash",
     color: "#071D92",
-    name: "Finance",
   },
 ];
 
@@ -50,9 +47,6 @@ const Services = ({ navigation }) => {
   }, []);
   const Item = ({ item }) => (
     <Pressable
-      onPress={() => 
-        navigation.navigate(item.name)
-      }
       style={() => [
         {
           backgroundColor: "white",
@@ -98,13 +92,6 @@ const Services = ({ navigation }) => {
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable> 
-    <Pressable
-      onPress={() => 
-        navigation.navigate('AddService')
-      }
-    >
-<FontAwesome5 name='plus-circle' size={30} color='#071D92' style={{marginRight: 15}}/>
-</Pressable>    
           
           </View>
           <Text style={styles.headerText}>Dịch vụ</Text>
@@ -113,30 +100,6 @@ const Services = ({ navigation }) => {
         <View style={styles.body}>
         
         <Text style={styles.header}>Xem dịch vụ</Text>
-        <Controller
-        name="room"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.dropdownRoom}>
-            <DropDownPicker
-              style={styles.dropdown}
-              open={roomOpen}
-              value={roomValue} //roomValue
-              items={room}
-              setOpen={setRoomOpen}
-              setValue={setRoomValue}
-              setItems={setRoom}
-              placeholder="Chọn phòng"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onRoomOpen}
-              onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-        )}
-      />
         <View style={styles.menu}>
         <FlatList
           data={DATA1}

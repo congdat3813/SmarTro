@@ -1,11 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState,  useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NumberFormat from 'react-number-format';
+import moment from 'moment';
 
 const DATA1 = [
   {
@@ -41,6 +42,18 @@ const DATA1 = [
 ];
 
 const Tenants = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/tenant?id=1");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+
   const Tenant = ({ item }) => {
     return (
       <Pressable
@@ -80,7 +93,7 @@ const Tenants = ({ navigation }) => {
       <Text style={styles.id}>{item.name}</Text>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Số điện thoại: {item.phone}</Text>
-      <Text style={styles.info}>Thuê từ: {item.startDate}</Text>
+      <Text style={styles.info}>Thuê từ: {moment(item.time).format('DD/MM/YYYY')}</Text>
       </View>
     </Pressable>
     )};
@@ -121,17 +134,12 @@ const renderTenant = ({ item }) => {
         // onChangeText={onChangeText}
         value=""
       ></TextInput>
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
+
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
 <FlatList
-          data={DATA1}
+          data={data}
           renderItem={renderTenant}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -331,7 +339,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: 370,
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {

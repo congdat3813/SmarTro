@@ -1,11 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NumberFormat from 'react-number-format';
+import moment from 'moment';
 
 const DATA1 = [
   {
@@ -38,8 +39,21 @@ const DATA1 = [
 ];
 
 const Bills = ({ navigation }) => {
-  const [status, setStatus] = useState("Chưa thanh toán");
+  const [status, setStatus] = useState(0);
+  const [stt, setStt] = useState("Chưa thanh toán");
   const [statusColor, setStatusColor] = useState("#F2BF00");
+
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill?id=1");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
   const Bill = ({ item }) => (
     <Pressable
     onPress={() =>
@@ -67,7 +81,7 @@ const Bills = ({ navigation }) => {
     ]}
   >
       <View style={styles.title}>
-      <Text style={styles.id}>#{item.id}</Text>
+      <Text style={styles.id}>{item.code}</Text>
       <Text style={{
     fontSize: 15,
     fontStyle: "italic",
@@ -78,10 +92,10 @@ const Bills = ({ navigation }) => {
     </View>
     <View style={styles.title}>
     <Text style={styles.info}>Phòng: {item.room}</Text>
-    <Text style={styles.price}>{item.value}đ</Text>
+    <Text style={styles.price}>{item.price}đ</Text>
     </View>
     <Text style={styles.info}>Loại: {item.type}</Text>
-    <Text style={styles.info}>Hạn thanh toán: {item.startDate} - {item.endDate}</Text>
+    <Text style={styles.info}>Hạn thanh toán: {moment(item.startTime).format('DD/MM/YYYY')} - {moment(item.endTime).format('DD/MM/YYYY')}</Text>
   </Pressable>
     );
 
@@ -121,12 +135,6 @@ const renderBill = ({ item }) => {
         // onChangeText={onChangeText}
         value=""
       ></TextInput>
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
@@ -134,27 +142,30 @@ const renderBill = ({ item }) => {
 
 <Pressable
   onPress={() => {
-    setStatus("Chưa thanh toán");
+    setStatus(0);
+    setStt("Chưa thanh toán");
     setStatusColor("#F2BF00");
   }}
-  style={(status == "Chưa thanh toán")? styles.yellowButton : styles.yellowButtonOutline}>
-  <Text style={(status == "Chưa thanh toán")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa thanh toán</Text>
+  style={(status == 0)? styles.yellowButton : styles.yellowButtonOutline}>
+  <Text style={(status == 0)? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa thanh toán</Text>
 </Pressable>
 <Pressable
   onPress={() => {
-    setStatus("Đã thanh toán");
+    setStatus(1);
+    setStt("Đã thanh toán");
     setStatusColor("#071D92");
   }}
-  style={(status == "Đã thanh toán")? styles.blueButton : styles.blueButtonOutline}>
-  <Text style={(status == "Đã thanh toán")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đã thanh toán</Text>
+  style={(status == 1)? styles.blueButton : styles.blueButtonOutline}>
+  <Text style={(status == 1)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đã thanh toán</Text>
 </Pressable>
 <Pressable
   onPress={() => {
-    setStatus("Trễ hạn");
+    setStatus(2);
+    setStt("Trễ hạn");
     setStatusColor("#BD0000");
   }}
-  style={(status == "Trễ hạn")? styles.redButton : styles.redButtonOutline}>
-  <Text style={(status == "Trễ hạn")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#BD0000", fontSize: 15, fontWeight: 'bold'}}>Trễ hạn</Text>
+  style={(status == 2)? styles.redButton : styles.redButtonOutline}>
+  <Text style={(status == 2)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#BD0000", fontSize: 15, fontWeight: 'bold'}}>Trễ hạn</Text>
 </Pressable>
 </View>
 
@@ -185,7 +196,7 @@ const renderBill = ({ item }) => {
 </View> */}
 
 <FlatList
-          data={DATA1.filter(item => item.status == status)}
+          data={data.filter(item => item.status == stt)}
           renderItem={renderBill}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -385,7 +396,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: 370,
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {

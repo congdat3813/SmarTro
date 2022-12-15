@@ -1,13 +1,25 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SwipeableModal from "./SwipeableModal";
+import moment from 'moment';
 
 const TenantInfo = ({ navigation, route: { params } }) => {
-  const {item, fromTenants} = params;
+  const [item, setItem] = useState({});
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/tenant/1");
+    const data = await resp.json();
+    setItem(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },{});
+  // const {item, fromTenants} = params;
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -45,7 +57,7 @@ const TenantInfo = ({ navigation, route: { params } }) => {
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Thuê từ</Text>
-            <Text style={styles.price}>{item.startDate}</Text>
+            <Text style={styles.price}>{moment(item.time).format('DD/MM/YYYY')}</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Số điện thoại</Text>
@@ -57,18 +69,16 @@ const TenantInfo = ({ navigation, route: { params } }) => {
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>CMND/CCCD</Text>
-            <Text style={styles.price}>{item.id}</Text>
+            <Text style={styles.price}>{item.cccd}</Text>
           </View>
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Ngày sinh</Text>
-            <Text style={styles.price}>{item.DoB}</Text>
+            <Text style={styles.price}>{moment(item.birthday).format('DD/MM/YYYY')}</Text>
           </View>
 
         </View>
 
-        <Pressable style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16,  fontWeight: 'bold'}}>Xóa</Text>
-        </Pressable>
+        <SwipeableModal />
 
         {/* <TextInput
         style={styles.input}
@@ -229,7 +239,7 @@ const styles = StyleSheet.create({
   button: {
     width: 370,
     height: 50,
-    backgroundColor: "#660B8E",
+    backgroundColor: "#BD0000",
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center'
