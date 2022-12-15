@@ -15,59 +15,69 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const RoomInfo = ({ navigation, route: { params } }) => {
-  const item =   {
-    id: "1",
-    room: 101,
-    area: 45,
-    price: 3000000,
-    hired: 0,
-    number: 3,
-    startDate: '--/--/----',
-    subject: 'Nam, Nữ',
-    services: [
-      {
-        service: 'Wifi',
-        price: 150000,
-      },
-      {
-        service: 'Rác',
-        price: 20000,
-      },
-    ],
-    image: 'https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg',
-    tenants: [
-      {
-        id: "215529249",
-        name: 'Nguyễn Văn A',
-        phone: '0123456789',
-        email: 'nva@gmail.com',
-        DoB: '05/01/2001',
-        room: 101,
-        startDate: '01/01/2021',
-        image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
-      },
-      {
-        id: "052201008697",
-        name: 'Nguyễn Văn B',
-        phone: '0123456789',
-        email: 'nvb@gmail.com',
-        DoB: '05/02/2001',
-        room: 102,
-        startDate: '01/02/2021',
-        image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
-      },
-      {
-        id: "052201008699",
-        name: 'Nguyễn Văn C',
-        phone: '0123456789',
-        email: 'nvc@gmail.com',
-        DoB: '05/03/2001',
-        room: 103,
-        startDate: '01/03/2021',
-        image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
-      },
-    ]
+  // const item =   {
+  //   id: "1",
+  //   room: 101,
+  //   area: 45,
+  //   price: 3000000,
+  //   hired: 0,
+  //   number: 3,
+  //   startDate: '--/--/----',
+  //   subject: 'Nam, Nữ',
+  //   services: [
+  //     {
+  //       service: 'Wifi',
+  //       price: 150000,
+  //     },
+  //     {
+  //       service: 'Rác',
+  //       price: 20000,
+  //     },
+  //   ],
+  //   image: 'https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg',
+  //   tenants: [
+  //     {
+  //       id: "215529249",
+  //       name: 'Nguyễn Văn A',
+  //       phone: '0123456789',
+  //       email: 'nva@gmail.com',
+  //       DoB: '05/01/2001',
+  //       room: 101,
+  //       startDate: '01/01/2021',
+  //       image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  //     },
+  //     {
+  //       id: "052201008697",
+  //       name: 'Nguyễn Văn B',
+  //       phone: '0123456789',
+  //       email: 'nvb@gmail.com',
+  //       DoB: '05/02/2001',
+  //       room: 102,
+  //       startDate: '01/02/2021',
+  //       image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  //     },
+  //     {
+  //       id: "052201008699",
+  //       name: 'Nguyễn Văn C',
+  //       phone: '0123456789',
+  //       email: 'nvc@gmail.com',
+  //       DoB: '05/03/2001',
+  //       room: 103,
+  //       startDate: '01/03/2021',
+  //       image: 'https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg'
+  //     },
+  //   ]
+  // };
+  const [item, setItem] = useState({});
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/bill/all/" + params.item.id);
+    const data = await resp.json();
+    setItem(data);
+    setFilterNewData(data);
   };
+  useEffect(() => {
+    fetchData();
+  },{});
   const [status, setStatus] = useState(true);
   const [content, setContent] = useState(
       <View>

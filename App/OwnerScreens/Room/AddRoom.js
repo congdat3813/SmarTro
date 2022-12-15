@@ -22,6 +22,7 @@ const rooms = [
 ];
 
 const AddRoom = ({ navigation }) => {
+
   const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImageAsync = async () => {
@@ -40,11 +41,6 @@ const AddRoom = ({ navigation }) => {
   const PlaceholderImage = require('../../../assets/logo.png');
 
   const { handleSubmit, control } = useForm();
-  const [genderOpen, setGenderOpen] = useState(false);
-  const [genderValue, setGenderValue] = useState(null);
-  const [gender, setGender] = useState(rooms);
-  const onGenderOpen = useCallback(() => {
-  }, []);
   return (
     <View style={styles.container}>
       <LinearGradient

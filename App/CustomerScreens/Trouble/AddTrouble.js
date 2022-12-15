@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DropDownPicker from "react-native-dropdown-picker";
 import {useForm, Controller} from 'react-hook-form';
+import SwipeableModal from "./SwipeableModal";
 import * as ImagePicker from 'expo-image-picker';
 import Button from "./Button";
 import ImageViewer from "./ImageViewer";
@@ -140,18 +141,16 @@ const AddTrouble = ({ navigation }) => {
       />
 
 <Text style={styles.header}>Hình ảnh</Text>
-<View style={styles.imagePicker}>
+{/* <View style={styles.imagePicker}>
 <View style={styles.imageContainer}>
         <ImageViewer placeholderImageSource={PlaceholderImage} selectedImage={selectedImage} />
       </View>
       <View style={styles.footerContainer}>
         <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
       </View>
-    </View>
+    </View> */}
 
-        {/* <Pressable style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16}}>Thêm</Text>
-        </Pressable> */}
+        <SwipeableModal />
 
 
         {/* <TextInput
@@ -173,8 +172,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   linearGradient: {
-    // alignItems: "center",
-    // justifyContent: "center",
     borderRadius: 5,
     height: "100%",
     width: 400,

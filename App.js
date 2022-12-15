@@ -30,7 +30,6 @@ import CRoomInfo from './App/CustomerScreens/Room/RoomInfo';
 import CBills from './App/CustomerScreens/Bill/Bills';
 import CBillInfo from './App/CustomerScreens/Bill/BillInfo';
 import CServices from './App/CustomerScreens/Service/Services';
-import CAddService from './App/CustomerScreens/Service/AddService';
 import CTroubles from './App/CustomerScreens/Trouble/Troubles';
 import CTroubleInfo from './App/CustomerScreens/Trouble/TroubleInfo';
 import CAddTrouble from './App/CustomerScreens/Trouble/AddTrouble';
@@ -77,7 +76,6 @@ export default function App() {
   //     <Stack.Screen name="Bills" component={CBills} />
   //     <Stack.Screen name="BillInfo" component={CBillInfo} />
   //     <Stack.Screen name="Services" component={CServices} />
-  //     <Stack.Screen name="AddService" component={CAddService} />
   //     <Stack.Screen name="Troubles" component={CTroubles} />
   //     <Stack.Screen name="TroubleInfo" component={CTroubleInfo} />
   //     <Stack.Screen name="AddTrouble" component={CAddTrouble} />

@@ -13,26 +13,53 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import moment from 'moment';
 
 const RoomInfo = ({ navigation, route: { params } }) => {
-  const [status, setStatus] = useState(true);
+  // const params;
   const [item, setItem] = useState({});
-  const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/room/1");
+
+  useEffect(() => {
+    // const data=fetchData();
+    // console.log(data);
+    // setItem(data);
+    const fetchData = async () => {
+      // console.log("ITEM ID:", params.item.id)
+      const resp = await fetch("https://tintrott.cleverapps.io/api/room/" + params.item.id);
+      const data = await resp.json();
+      console.log(data);
+      setItem(data);
+      console.log(item);
+      // console.log(data);
+      // console.log(item);
+      // return data;
+      // setFilterNewData(data);
+    };
+    fetchData();
+    // console.log(item);
+  },{});
+
+  console.log(item);
+
+  const [data, setData] = useState([]);
+  const fetchData1 = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/tenant/room?id=1");
     const data = await resp.json();
-    setItem(data);
+    setData(data);
     setFilterNewData(data);
   };
   useEffect(() => {
-    fetchData();
+    fetchData1();
   },[]);
+
+  const [status, setStatus] = useState(true);
   // const {item} = params;
   const [content, setContent] = useState(
       <View>
       <View style={styles.infoTag}>
               <View style={styles.title}>
                   <Text style={styles.detailInfo}>Phòng</Text>
-                  <Text style={styles.price}>{item.room}</Text>
+                  <Text style={styles.price}>{item.name}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Diện tích</Text>
@@ -44,15 +71,15 @@ const RoomInfo = ({ navigation, route: { params } }) => {
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Khách thuê</Text>
-                  <Text style={styles.price}>{item.hired}/{item.number}</Text>
+                  <Text style={styles.price}>{item.numRents}/{item.numberOfTenants}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Thuê từ</Text>
-                  <Text style={styles.price}>{item.startDate}</Text>
+                  <Text style={styles.price}>{moment(item.rentFrom).format('DD/MM/YYYY')}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Đối tượng</Text>
-                  <Text style={styles.price}>{item.subject}</Text>
+                  <Text style={styles.price}>{item.sex}</Text>
                 </View>
       
               </View>
@@ -61,7 +88,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       
                 <View style={styles.descriptionTag}>
                 <FlatList
-                data={item.services}
+                data={item.serviceIList}
                 renderItem={renderService}
                 // keyExtractor={(item) => item.id}
                 style={{}}
@@ -109,7 +136,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       <Text style={styles.id}>{item.name}</Text>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Số điện thoại: {item.phone}</Text>
-      <Text style={styles.info}>Thuê từ: {item.startDate}</Text>
+      <Text style={styles.info}>Thuê từ: {moment(item.rentFrom).format('DD/MM/YYYY')}</Text>
       </View>
     </Pressable>
     )};
@@ -126,7 +153,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
   const renderService = ({ item }) => {
     return (
       <View style={styles.title}>
-      <Text style={styles.detailInfo}>{item.service}</Text>
+      <Text style={styles.detailInfo}>{item.name}</Text>
       <Text style={styles.price}>{item.price}đ</Text>
     </View>
     );
@@ -166,7 +193,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       <View style={styles.infoTag}>
               <View style={styles.title}>
                   <Text style={styles.detailInfo}>Phòng</Text>
-                  <Text style={styles.price}>{item.room}</Text>
+                  <Text style={styles.price}>{item.name}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Diện tích</Text>
@@ -178,15 +205,15 @@ const RoomInfo = ({ navigation, route: { params } }) => {
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Khách thuê</Text>
-                  <Text style={styles.price}>{item.hired}/{item.number}</Text>
+                  <Text style={styles.price}>{item.numRents}/{item.numberOfTenants}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Thuê từ</Text>
-                  <Text style={styles.price}>{item.startDate}</Text>
+                  <Text style={styles.price}>{moment(item.rentFrom).format('DD/MM/YYYY')}</Text>
                 </View>
                 <View style={styles.title}>
                   <Text style={styles.detailInfo}>Đối tượng</Text>
-                  <Text style={styles.price}>{item.subject}</Text>
+                  <Text style={styles.price}>{item.sex}</Text>
                 </View>
       
               </View>
@@ -195,7 +222,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
       
                 <View style={styles.descriptionTag}>
                 <FlatList
-                data={item.services}
+                data={item.serviceIList}
                 renderItem={renderService}
                 // keyExtractor={(item) => item.id}
                 style={{}}
@@ -212,7 +239,7 @@ const RoomInfo = ({ navigation, route: { params } }) => {
     setStatus(false);
     setContent(
       <FlatList
-          data={item.tenants}
+          data={data}
           renderItem={renderTenant}
           keyExtractor={(item) => item.id}
           style={styles.list}

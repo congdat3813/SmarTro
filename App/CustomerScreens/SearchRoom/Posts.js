@@ -38,9 +38,18 @@ const DATA1 = [
 ];
 
 const Posts = ({ navigation }) => {
-  const [status, setStatus] = useState("Đã đăng");
-  const [posts, setPosts] = useState(DATA1);
-  const Post1 = ({ item }) => {
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/room/tus");
+    const data = await resp.json();
+    setData1(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+  const Post = ({ item }) => {
     return (
       <Pressable
       onPress={() =>
@@ -78,9 +87,9 @@ const Posts = ({ navigation }) => {
       </Pressable>
     )};
 
-    const renderPost1 = ({ item }) => {
+    const renderPost = ({ item }) => {
       return (
-        <Post1
+        <Post
           item={item}
           onPress={() => setSelectedId(item.id)}
         />
@@ -180,8 +189,8 @@ const Posts = ({ navigation }) => {
       </View>
 
         <FlatList
-          data={posts}
-          renderItem={status == "Đã đăng"? renderPost1 : renderPost2}
+          data={data}
+          renderItem={renderPost}
           keyExtractor={(item) => item.id}
           style={styles.list}
         />   

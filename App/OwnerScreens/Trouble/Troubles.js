@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import moment from 'moment';
 
 const DATA1 = [
   {
@@ -39,7 +40,7 @@ const DATA1 = [
 const Troubles = ({ navigation }) => {
   const [data, setData] = useState([]);
   const fetchData = async () => {
-    const resp = await fetch("https://tintrott.cleverapps.io/api/incident?id=1&type=1");
+    const resp = await fetch("https://tintrott.cleverapps.io/api/incident?id=1");
     const data = await resp.json();
     setData(data);
     setFilterNewData(data);
@@ -48,8 +49,8 @@ const Troubles = ({ navigation }) => {
     fetchData();
   },[]);
 
-
-  const [status, setStatus] = useState("Đang đợi xử lý");
+  const [status, setStatus] = useState(0);
+  const [stt, setStt] = useState("Đang đợi xử lý");
   const [statusColor, setStatusColor] = useState("#F2BF00");
   const Trouble = ({ item }) => {
     return (
@@ -100,7 +101,7 @@ const Troubles = ({ navigation }) => {
     </View>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Loại: {item.type}</Text>
-      <Text style={styles.info}>Thời gian: {item.date}</Text>
+      <Text style={styles.info}>Thời gian: {moment(item.time).format('DD/MM/YYYY')}</Text>
       </View>
     </Pressable>
     )};
@@ -145,32 +146,35 @@ const Troubles = ({ navigation }) => {
 
         <Pressable
           onPress={() => {
-            setStatus("Đang đợi xử lý");
+            setStatus(0);
+            setStt("Đang đợi xử lý");
             setStatusColor("#F2BF00");
           }}
-          style={(status == "Đang đợi xử lý")? styles.yellowButton : styles.yellowButtonOutline}>
-          <Text style={(status == "Đang đợi xử lý")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Đang đợi xử lý</Text>
+          style={(status == 0)? styles.yellowButton : styles.yellowButtonOutline}>
+          <Text style={(status == 0)? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Đang đợi xử lý</Text>
         </Pressable>
         <Pressable
           onPress={() => {
-            setStatus("Đang xử lý");
+            setStatus(1);
+            setStt("Đang xử lý");
             setStatusColor("#071D92");
           }}
-          style={(status == "Đang xử lý")? styles.blueButton : styles.blueButtonOutline}>
-          <Text style={(status == "Đang xử lý")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đang xử lý</Text>
+          style={(status == 1)? styles.blueButton : styles.blueButtonOutline}>
+          <Text style={(status == 1)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đang xử lý</Text>
         </Pressable>
         <Pressable
           onPress={() => {
-            setStatus("Đã xử lý");
+            setStatus(2);
+            setStt("Đã xử lý");
             setStatusColor("#0BA108");
           }}
-          style={(status == "Đã xử lý")? styles.greenButton : styles.greenButtonOutline}>
-          <Text style={(status == "Đã xử lý")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#0BA108", fontSize: 15, fontWeight: 'bold'}}>Đã xử lý</Text>
+          style={(status == 2)? styles.greenButton : styles.greenButtonOutline}>
+          <Text style={(status == 2)? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#0BA108", fontSize: 15, fontWeight: 'bold'}}>Đã xử lý</Text>
         </Pressable>
         </View>
 
         <FlatList
-          data={DATA1.filter(item => item.status == status)}
+          data={data.filter(item => item.status == stt)}
           renderItem={renderTrouble}
           keyExtractor={(item) => item.id}
           style={styles.list}

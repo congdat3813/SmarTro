@@ -41,7 +41,7 @@ const TransactionInfo = ({ navigation, route: { params } }) => {
         <View style={styles.body}>
 
         <View style={styles.infoTag}>
-        <Text style={styles.id}>#{item.id}</Text>
+        <Text style={styles.id}>{item.code}</Text>
         <View style={styles.title}>
             <Text style={styles.detailInfo}>Phòng</Text>
             <Text style={styles.price}>{item.room}</Text>
