@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -106,7 +106,17 @@ const DATA1 = [
 ];
 
 const Rooms = ({ navigation }) => {
-  
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/room?id=1");
+    const data = await resp.json();
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);  
+
   const Room = ({ item }) => {
     return (
       <Pressable
@@ -140,8 +150,8 @@ const Rooms = ({ navigation }) => {
 
       <Text style={styles.id}>Phòng {item.room}</Text>
       <Text style={styles.info}>Giá: {item.price}đ</Text>
-      <Text style={styles.info}>Khách thuê: {item.hired}/{item.number}</Text>
-      <Text style={styles.info}>Thuê từ: {item.startDate}</Text>
+      <Text style={styles.info}>Khách thuê: {item.numRents}/{item.numberOfTenants}</Text>
+      <Text style={styles.info}>Thuê từ: {item.rentFrom}</Text>
       </View>
     </Pressable>
     )};
@@ -170,9 +180,19 @@ const renderRoom = ({ item }) => {
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable>  
+    <Pressable
+      onPress={() => 
+        navigation.navigate('AddRoom')
+      }
+    >
+      <FontAwesome5 name='plus-circle' size={30} color='#660B8E' style={{marginRight: 15}}/>
+    </Pressable>   
+
+
           </View>
           <Text style={styles.headerText}>Phòng cho thuê</Text>
         </View>
+
         <View style={styles.body}>
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'center'}}>
@@ -182,17 +202,12 @@ const renderRoom = ({ item }) => {
         // onChangeText={onChangeText}
         value=""
       ></TextInput>
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
+
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
 <FlatList
-          data={DATA1}
+          data={data}
           renderItem={renderRoom}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -257,6 +272,7 @@ const styles = StyleSheet.create({
   },
   headerBarTitle: {
     alignItems: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     // position: 'absolute',
     marginBottom: 10,
@@ -392,7 +408,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: 370,
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {

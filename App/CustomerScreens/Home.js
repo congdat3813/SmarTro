@@ -13,7 +13,7 @@ const DATA1 = [
     title: "Phòng của tôi",
     icon: "door-open",
     color: "#660B8E",
-    name: "Room",
+    name: "RoomInfo",
   },
   {
     id: "2",
@@ -44,7 +44,7 @@ const DATA2 = [
     title: "Phòng đã lưu",
     icon: "bookmark",
     color: "#F2BF00",
-    name: "Tenant",
+    name: "SavedPosts",
   },
   {
     id: "6",

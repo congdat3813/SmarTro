@@ -37,45 +37,9 @@ const DATA1 = [
   },
 ];
 
-const DATA2 = [
-  {
-    id: "1234",
-    room: 101,
-    price: 3000000,
-    hired: 0,
-    number: 3,
-    image: 'https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg'
-  },
-  {
-    id: "2345",
-    room: 102,
-    price: 4000000,
-    hired: 0,
-    number: 4,
-    image: 'https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg'
-  },
-];
-
-const Posts = ({ navigation }) => {
-  const [data1, setData1] = useState([]);
-  const [data2, setData2] = useState([]);
-  const fetchData = async () => {
-    const resp1 = await fetch("https://tintrott.cleverapps.io/api/room/tus?id=1");
-    const data1 = await resp1.json();
-    setData1(data1);
-    setFilterNewData(data1);
-
-    const resp2 = await fetch("https://tintrott.cleverapps.io/api/room/tus/no?id=1");
-    const data2 = await resp2.json();
-    setData2(data2);
-    setFilterNewData(data2);
-  };
-  useEffect(() => {
-    fetchData();
-  },[]);
-
+const SavedPosts = ({ navigation }) => {
   const [status, setStatus] = useState("Đã đăng");
-  const [posts, setPosts] = useState(data1);
+  const [posts, setPosts] = useState(DATA1);
   const Post1 = ({ item }) => {
     return (
       <Pressable
@@ -90,7 +54,7 @@ const Posts = ({ navigation }) => {
     }}
   />
       <View style={styles.title}>
-        <Text style={styles.id}>{item.name}</Text>
+        <Text style={styles.id}>{item.title}</Text>
         <Text style={styles.price}>{item.price}đ</Text>
       </View>  
       <View style={{flexDirection: 'row'}}>
@@ -100,7 +64,7 @@ const Posts = ({ navigation }) => {
           color="#F2BF00"
           style={{ marginRight: 15 }}
         />
-        <Text style={styles.info}>Phòng {item.num} người</Text>
+        <Text style={styles.info}>Phòng {item.number} người</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
       <FontAwesome5
@@ -109,7 +73,7 @@ const Posts = ({ navigation }) => {
           color="#660B8E"
           style={{ marginRight: 15 }}
         />
-      <Text style={styles.info}>{item.address}</Text>
+      <Text style={styles.info}>{item.location}</Text>
       </View>
       </Pressable>
     )};
@@ -126,9 +90,6 @@ const Posts = ({ navigation }) => {
     const Post2 = ({ item }) => {
       return (
         <Pressable
-        onPress={() =>
-          navigation.navigate('AddPost', {item})
-        }   
         style={({ pressed }) => [
           {
             backgroundColor: pressed ? "#F3E8FF" : "white",
@@ -192,7 +153,7 @@ const Posts = ({ navigation }) => {
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable> 
           </View>
-          <Text style={styles.headerText}>Đăng phòng</Text>
+          <Text style={styles.headerText}>Bài đăng đã lưu</Text>
         </View>
         <View style={styles.body}>
 
@@ -203,27 +164,20 @@ const Posts = ({ navigation }) => {
         // onChangeText={onChangeText}
         value=""
       ></TextInput>
+      {/* <Pressable
+      onPress={() => 
+        navigation.navigate('Home')
+      }
+      >
+                  <FontAwesome5
+              name="sliders-h"
+              size={30}
+              color="#660B8E"
+              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
+            />
+      </Pressable> */}
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
-
-      <View style={styles.buttons}>
-      <Pressable
-  onPress={() => {
-    setStatus("Đã đăng");
-    setPosts(data1);
-  }}
-  style={(status == "Đã đăng")? styles.violetButton : styles.violetButtonOutline}>
-  <Text style={(status == "Đã đăng")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#660B8E", fontSize: 15, fontWeight: 'bold'}}>Đã đăng</Text>
-</Pressable>
-<Pressable
-  onPress={() => {
-    setStatus("Chưa đăng");
-    setPosts(data2);
-  }}
-  style={(status == "Chưa đăng")? styles.yellowButton : styles.yellowButtonOutline}>
-  <Text style={(status == "Chưa đăng")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa đăng</Text>
-</Pressable>
-</View>
 
         <FlatList
           data={posts}
@@ -430,4 +384,4 @@ const styles = StyleSheet.create({
     left: 20
 },
 });
-export default Posts;
+export default SavedPosts;

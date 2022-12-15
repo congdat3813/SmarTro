@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -120,12 +120,12 @@ const renderBill = ({ item }) => {
         // onChangeText={onChangeText}
         value=""
       ></TextInput>
-                  <FontAwesome5
+                  {/* <FontAwesome5
               name="sliders-h"
               size={30}
               color="#660B8E"
               style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
+            /> */}
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: 370,
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {
