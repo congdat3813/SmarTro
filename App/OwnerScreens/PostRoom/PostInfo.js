@@ -13,6 +13,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import moment from 'moment';
 
 const PostInfo = ({ navigation, route: { params } }) => {
   // const {item} = params;
@@ -50,13 +51,13 @@ const PostInfo = ({ navigation, route: { params } }) => {
         <Image
         style={styles.largeImage}
         source={{
-          uri: item.image,
+          uri: "https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg",
         }}
       />  
 
           <View style={styles.infoTag}>
           <Text style={styles.detailInfo}>Địa chỉ: {item.address}</Text>
-          <Text style={styles.detailInfo}>Ngày đăng: {item.time}</Text>
+          <Text style={styles.detailInfo}>Ngày đăng: {moment(item.time).format('DD/MM/YYYY')}</Text>
           <View style={{flexDirection: 'row'}}>
           <Image
         style={styles.smallImage}

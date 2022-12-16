@@ -85,7 +85,7 @@ const Tenants = ({ navigation }) => {
     <Image
     style={styles.smallImage}
     source={{
-      uri: item.image,
+      uri: "https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg",
     }}
   />  
   <View>

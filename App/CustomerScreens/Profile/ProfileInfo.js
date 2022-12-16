@@ -53,7 +53,7 @@ const ProfileInfo = ({ navigation, route: { params } }) => {
         <Image
         style={styles.largeImage}
         source={{
-          uri: item.image,
+          uri: "https://i.pinimg.com/originals/18/7f/65/187f656be22bf834ae896e60485ddd41.jpg",
         }}
       />  
 <Text style={styles.id}>{item.name}</Text>
