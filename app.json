@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "demoReactNativeApp",
+    "name": "TinTro",
     "slug": "demoReactNativeApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo1.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -24,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.dathoang3813.demoReactNativeApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e1f3267b-ab04-4e40-a64d-ce1025a52f48"
+      }
     }
   }
 }

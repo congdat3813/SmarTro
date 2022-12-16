@@ -16,13 +16,13 @@ const DATA = [
     color: "#F08672",
     name: "Posts",
   },
-  {
-    id: "5",
-    title: "Phòng đã lưu",
-    icon: "bookmark",
-    color: "#F08672",
-    name: "SavedPosts",
-  },
+  // {
+  //   id: "5",
+  //   title: "Phòng đã lưu",
+  //   icon: "bookmark",
+  //   color: "#F08672",
+  //   name: "SavedPosts",
+  // },
 ];
 
 const DATA1 = [
