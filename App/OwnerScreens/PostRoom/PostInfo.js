@@ -7,15 +7,26 @@ import {
   View,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import moment from 'moment';
 
 const PostInfo = ({ navigation, route: { params } }) => {
-  const {item} = params;
+  // const {item} = params;
+  const [item, setItem] = useState({});
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/room/tus/1");
+    const data = await resp.json();
+    setItem(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -40,14 +51,13 @@ const PostInfo = ({ navigation, route: { params } }) => {
         <Image
         style={styles.largeImage}
         source={{
-          uri: item.image,
+          uri: "https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg",
         }}
       />  
 
           <View style={styles.infoTag}>
-          <Text style={styles.detailInfo}>Địa chỉ: 162 Lê Quý Đôn, Tân Lập,
-Đông Hòa, Dĩ An, Bình Dương</Text>
-          <Text style={styles.detailInfo}>Ngày đăng: 20/11/2022</Text>
+          <Text style={styles.detailInfo}>Địa chỉ: {item.address}</Text>
+          <Text style={styles.detailInfo}>Ngày đăng: {moment(item.time).format('DD/MM/YYYY')}</Text>
           <View style={{flexDirection: 'row'}}>
           <Image
         style={styles.smallImage}
@@ -56,8 +66,8 @@ const PostInfo = ({ navigation, route: { params } }) => {
         }}
       />  
             <View>
-              <Text style={styles.detailInfo}>Dương Bá Tình</Text>
-              <Text style={styles.detailInfo}>Số điện thoại: 03030303</Text>
+              <Text style={styles.detailInfo}>{item.userName}</Text>
+              <Text style={styles.detailInfo}>Số điện thoại: {item.phone}</Text>
               <View style={{flexDirection: 'row'}}>
               <Text style={styles.detailInfo}>Đánh giá: </Text>
               <FontAwesome name="star" size={24} color="#F2BF00" />
@@ -73,7 +83,7 @@ const PostInfo = ({ navigation, route: { params } }) => {
           <Text style={styles.header}>Mô tả</Text>
 
           <View style={styles.descriptionTag}>
-            <Text style={{fontSize: 20}}>{item.description}</Text>
+            <Text style={{fontSize: 20}}>{item.note}</Text>
           </View>
         </View>
       </LinearGradient>
@@ -290,6 +300,14 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     paddingTop: 15
+  },
+  address: {
+    fontSize: 15,
+    // fontWeight: 'bold',
+    // marginBottom: 5,
+    marginRight: 10,
+    width: 310,
+    height: 20
   },
 });
 export default PostInfo;

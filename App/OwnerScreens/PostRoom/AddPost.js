@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState, useCallback } from "react";
+import { FlatList, Pressable, StyleSheet, Text, View, Image, Alert, TextInput } from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DropDownPicker from "react-native-dropdown-picker";
 import {useForm, Controller} from 'react-hook-form';
+// import * as ImagePicker from 'expo-image-picker';
+// import Button from "./Button";
+// import ImageViewer from "./ImageViewer";
 
 const rooms = [
   { label: "101", value: "101" },
@@ -17,22 +17,30 @@ const rooms = [
   { label: "203", value: "203" },
 ];
 
-const AddService = ({ navigation }) => {
+const AddPost = ({ navigation }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setSelectedImage(result.assets[0].uri);
+    } else {
+      alert("You did not select any image.");
+    }
+  };
+
+  const PlaceholderImage = require('../../../assets/logo.png');
+
   const { handleSubmit, control } = useForm();
-  const [roomOpen, setRoomOpen] = useState(false);
-  const [roomValue, setRoomValue] = useState(null);
-  const [room, setRoom] = useState(rooms);
-  const onRoomOpen = useCallback(() => {
-    setTypeOpen(false);
+  const [genderOpen, setGenderOpen] = useState(false);
+  const [genderValue, setGenderValue] = useState(null);
+  const [gender, setGender] = useState(rooms);
+  const onGenderOpen = useCallback(() => {
   }, []);
-
-  const [typeOpen, setTypeOpen] = useState(false);
-  const [typeValue, setTypeValue] = useState(null);
-  const [type, setType] = useState(rooms);
-  const onTypeOpen = useCallback(() => {
-    setRoomOpen(false);
-  }, []);
-
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -43,13 +51,13 @@ const AddService = ({ navigation }) => {
           <View style={styles.headerBarTitle}>
           <Pressable
       onPress={() => 
-        navigation.navigate('Services')
+        navigation.pop()
       }
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable>
     </View>
-          <Text style={styles.headerText}>Thêm dịch vụ</Text>
+          <Text style={styles.headerText}>Đăng phòng</Text>
         </View>
         <View style={styles.body}>
 
@@ -72,79 +80,9 @@ const AddService = ({ navigation }) => {
             <Text style={styles.description}>Bóng đèn dài bị vỡ.</Text>
 
         </View> */}
-        <Text style={styles.header}>Phòng</Text>
+        <Text style={styles.header}>Mô tả</Text>
         <Controller
-        name="room"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.dropdownRoom}>
-            <DropDownPicker
-              style={styles.dropdown}
-              open={roomOpen}
-              value={roomValue} //roomValue
-              items={room}
-              setOpen={setRoomOpen}
-              setValue={setRoomValue}
-              setItems={setRoom}
-              placeholder="Chọn phòng"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onRoomOpen}
-              onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-        )}
-      />
-
-<Text style={styles.header}>Loại dịch vụ</Text>
-<Controller
-        name="type"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.dropdownType}>
-            <DropDownPicker
-              style={styles.dropdown}
-              open={typeOpen}
-              value={typeValue} //typeValue
-              items={type}
-              setOpen={setTypeOpen}
-              setValue={setTypeValue}
-              setItems={setType}
-              placeholder="Chọn loại dịch vụ"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onTypeOpen}
-              onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-        )}
-      />
-
-<Text style={styles.header}>Giá</Text>
-{/* <View style={{flexDirection: 'row'}}> */}
-<Controller
-        name="price"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            style={styles.input}
-            selectionColor={"#5188E3"}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-      />
-{/* <Text style={{fontSize: 40, marginHorizontal: 15}}>/</Text> */}
-{/* </View> */}
-
-<Text style={styles.header}>Chi tiết</Text>
-<Controller
-        name="detail"
+        name="note"
         defaultValue=""
         control={control}
         render={({ field: { onChange, value } }) => (
@@ -158,8 +96,9 @@ const AddService = ({ navigation }) => {
       />
 
         <Pressable style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16}}>Thêm</Text>
+          <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Đăng</Text>
         </Pressable>
+
 
         {/* <TextInput
         style={styles.input}
@@ -180,8 +119,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   linearGradient: {
-    // alignItems: "center",
-    // justifyContent: "center",
     borderRadius: 5,
     height: "100%",
     width: 400,
@@ -306,7 +243,7 @@ const styles = StyleSheet.create({
   button: {
     width: 370,
     height: 50,
-    backgroundColor: "#071D92",
+    backgroundColor: "#660B8E",
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center'
@@ -325,26 +262,69 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 20
   },
-  priceInput: {
-    height: 50,
-    width: 170,
-    backgroundColor: 'white',
+  yellowButton: {
+    width: 135,
+    height: 40,
+    backgroundColor: "#F2BF00",
     borderRadius: 12,
-    shadowOffset: {
-      width: 9,
-      height: 9,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    padding: 15,
-    marginBottom: 20
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15
   },
-  dropdownRoom: {
-    zIndex: 20,
-    borderWidth: 0,
-    borderRadius: 16,
+  blueButton: {
+    width: 115,
+    height: 40,
+    backgroundColor: "#071D92",
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15
   },
-  dropdownType: {
+  greenButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#0BA108",
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  yellowButtonOutline: {
+    width: 135,
+    height: 40,
+    backgroundColor: "white",
+    borderWidth: 2,
+    borderRadius: 12,
+    borderColor: "#F2BF00",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15
+  },
+  blueButtonOutline: {
+    width: 115,
+    height: 40,
+    backgroundColor: "white",
+    borderWidth: 2,
+    borderRadius: 12,
+    borderColor: "#071D92",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15
+  },
+  greenButtonOutline: {
+    width: 90,
+    height: 40,
+    backgroundColor: "white",
+    borderWidth: 2,
+    borderRadius: 12,
+    borderColor: "#0BA108",
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginBottom: 10
+  },
+  dropdownSection: {
     zIndex: 10,
     borderWidth: 0,
     borderRadius: 16,
@@ -360,6 +340,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6, 
     marginBottom: 20   
-  }
+  },
+  imagePicker: {
+    flex: 1,
+    backgroundColor: '#25292e',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    flex:1, 
+    paddingTop: 58
+  },
+  footerContainer: {
+    flex: 1 / 3,
+    alignItems: 'center',
+  },
 });
-export default AddService;
+export default AddPost;

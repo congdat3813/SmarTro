@@ -1,33 +1,43 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-const DATA1 = [
-  {
-    id: "1234",
-    status: "Đang đợi xử lý",
-    room: 101,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị vỡ.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-  {
-    id: "2345",
-    status: "Đang xử lý",
-    room: 102,
-    type: 'Hỏng đèn',
-    date: '01/01/2022',
-    description: 'Bóng đèn dài bị cháy.',
-    image: 'https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg'
-  },
-];
+import moment from "moment";
 
 const Troubles = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const [datastart, setDatastart]= useState([]);
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = data.filter((item) => {
+        const itemData = item.room? item.room.toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);      
+    }
+    else{
+      setFilterNewData(data);
+    }
+  };
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/incident?id=1&type=1");
+    const data = await resp.json();
+    setDatastart(data);
+    setData(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+
   const [status, setStatus] = useState("Đang đợi xử lý");
   const [statusColor, setStatusColor] = useState("#F2BF00");
   const Trouble = ({ item }) => {
@@ -61,7 +71,7 @@ const Troubles = ({ navigation }) => {
     <Image
     style={styles.smallImage}
     source={{
-      uri: item.image,
+      uri: "https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg",
     }}
   />  
   <View>
@@ -79,7 +89,7 @@ const Troubles = ({ navigation }) => {
     </View>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Loại: {item.type}</Text>
-      <Text style={styles.info}>Thời gian: {item.date}</Text>
+      <Text style={styles.info}>Thời gian: {moment(item.time).format('DD/MM/YYYY')}</Text>
       </View>
     </Pressable>
     )};
@@ -119,13 +129,23 @@ const Troubles = ({ navigation }) => {
           <Text style={styles.headerText}>Sự cố</Text>
         </View>
         <View style={styles.body}>
-
+        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 20, alignSelf: 'center'}}>
+        
+                <TextInput
+        style={styles.input}
+        onChangeText={onChangeSearch}
+        value={{searchQuery}}
+      ></TextInput>
+            <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
+      </View>
         <View style={styles.buttons}>
 
         <Pressable
           onPress={() => {
             setStatus("Đang đợi xử lý");
             setStatusColor("#F2BF00");
+            setData(datastart.filter(item => item.status == "Đang đợi xử lý"));
+            setFilterNewData(datastart.filter(item => item.status == "Đang đợi xử lý"));
           }}
           style={(status == "Đang đợi xử lý")? styles.yellowButton : styles.yellowButtonOutline}>
           <Text style={(status == "Đang đợi xử lý")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Đang đợi xử lý</Text>
@@ -134,6 +154,8 @@ const Troubles = ({ navigation }) => {
           onPress={() => {
             setStatus("Đang xử lý");
             setStatusColor("#071D92");
+            setData(datastart.filter(item => item.status == "Đang xử lý"));
+            setFilterNewData(datastart.filter(item => item.status == "Đang xử lý"));
           }}
           style={(status == "Đang xử lý")? styles.blueButton : styles.blueButtonOutline}>
           <Text style={(status == "Đang xử lý")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#071D92", fontSize: 15, fontWeight: 'bold'}}>Đang xử lý</Text>
@@ -142,6 +164,8 @@ const Troubles = ({ navigation }) => {
           onPress={() => {
             setStatus("Đã xử lý");
             setStatusColor("#0BA108");
+            setData(datastart.filter(item => item.status == "Đã xử lý"));
+            setFilterNewData(datastart.filter(item => item.status == "Đã xử lý"));
           }}
           style={(status == "Đã xử lý")? styles.greenButton : styles.greenButtonOutline}>
           <Text style={(status == "Đã xử lý")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#0BA108", fontSize: 15, fontWeight: 'bold'}}>Đã xử lý</Text>
@@ -149,7 +173,7 @@ const Troubles = ({ navigation }) => {
         </View>
 
         <FlatList
-          data={DATA1.filter(item => item.status == status)}
+          data={filterdata}
           renderItem={renderTrouble}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -373,6 +397,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 10,
     alignSelf: 'center'
-  }
+  },
+  input: {
+    height: 50,
+    width: '90%',
+    backgroundColor: 'white',
+    borderRadius: 12,
+    shadowOffset: {
+      width: 9,
+      height: 9,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    paddingLeft: 55
+  },
+  searchIcon: {
+    position: 'absolute',
+    left: 20
+},
 });
 export default Troubles;

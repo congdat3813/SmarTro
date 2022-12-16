@@ -1,12 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DropDownPicker from "react-native-dropdown-picker";
-import {useForm, Controller} from 'react-hook-form';
 
 const rooms = [
   { label: "101", value: "101" },
@@ -23,36 +19,33 @@ const DATA1 = [
     title: "Bảo vệ",
     icon: "user-shield",
     color: "#071D92",
-    name: "Room",
   },
   {
     id: "2",
     title: "Wifi",
     icon: "wifi",
     color: "#071D92",
-    name: "Tenant",
   },
   {
     id: "3",
     title: "Rác",
     icon: "trash",
     color: "#071D92",
-    name: "Finance",
   },
 ];
 
 const Services = ({ navigation }) => {
-  const { handleSubmit, control } = useForm();
-  const [roomOpen, setRoomOpen] = useState(false);
-  const [roomValue, setRoomValue] = useState(null);
-  const [room, setRoom] = useState(rooms);
-  const onRoomOpen = useCallback(() => {
-  }, []);
+  const [service, setService] = useState([]);
+  const fetchService = async (roomid) => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/service?id=1");
+    const data = await resp.json();
+    setService(data);
+  };
+  useEffect(() => {
+    fetchService();
+  },[service]);
   const Item = ({ item }) => (
     <Pressable
-      onPress={() => 
-        navigation.navigate(item.name)
-      }
       style={() => [
         {
           backgroundColor: "white",
@@ -70,8 +63,14 @@ const Services = ({ navigation }) => {
         },
       ]}
     >
-      <FontAwesome5 name={item.icon} size={45} color={item.color} />
-      <Text style={styles.item}>{item.title}</Text>
+    {item.name ==="Bảo vệ" ? 
+      <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+      item.name === "Wifi"?
+        <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+        <FontAwesome5 name="trash" size={45} color="#071D92" />
+      
+    }
+      <Text style={styles.item}>{item.name}</Text>
     </Pressable>
   );
 
@@ -98,13 +97,6 @@ const Services = ({ navigation }) => {
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
     </Pressable> 
-    <Pressable
-      onPress={() => 
-        navigation.navigate('AddService')
-      }
-    >
-<FontAwesome5 name='plus-circle' size={30} color='#071D92' style={{marginRight: 15}}/>
-</Pressable>    
           
           </View>
           <Text style={styles.headerText}>Dịch vụ</Text>
@@ -113,33 +105,9 @@ const Services = ({ navigation }) => {
         <View style={styles.body}>
         
         <Text style={styles.header}>Xem dịch vụ</Text>
-        <Controller
-        name="room"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.dropdownRoom}>
-            <DropDownPicker
-              style={styles.dropdown}
-              open={roomOpen}
-              value={roomValue} //roomValue
-              items={room}
-              setOpen={setRoomOpen}
-              setValue={setRoomValue}
-              setItems={setRoom}
-              placeholder="Chọn phòng"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onRoomOpen}
-              onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-        )}
-      />
         <View style={styles.menu}>
         <FlatList
-          data={DATA1}
+          data={service}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -270,6 +238,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6, 
     marginBottom: 20   
-  }
+  },
 });
 export default Services;

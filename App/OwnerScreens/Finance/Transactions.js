@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -34,6 +34,17 @@ const DATA1 = [
 ];
 
 const Transactions = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/revenue/all?id=1");
+    const data = await resp.json();
+    setData(data);
+    // setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
   const Transaction = ({ item }) => {
     const sign = (item.group == 'Thu')? '+' : '-';
     return (
@@ -64,7 +75,7 @@ const Transactions = ({ navigation }) => {
     >
       <View style={styles.title}>
         <Text style={styles.id}>#{item.id}</Text>
-        <Text style={styles.price}>{sign}{item.value}đ</Text>
+        <Text style={styles.price}>{sign}{item.price}đ</Text>
       </View>
       <Text style={styles.info}>Phòng: {item.room}</Text>
       <Text style={styles.info}>Loại: {item.type}</Text>
@@ -102,7 +113,7 @@ const Transactions = ({ navigation }) => {
         <View style={styles.body}>
 
         <FlatList
-          data={DATA1}
+          data={data}
           renderItem={renderTransaction}
           keyExtractor={(item) => item.id}
           style={styles.list}

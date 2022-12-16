@@ -1,58 +1,41 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DropDownPicker from "react-native-dropdown-picker";
-import {useForm, Controller} from 'react-hook-form';
+import {Dropdown} from 'react-native-element-dropdown';
 
-const rooms = [
-  { label: "101", value: "101" },
-  { label: "102", value: "102" },
-  { label: "103", value: "103" },
-  { label: "201", value: "201" },
-  { label: "202", value: "202" },
-  { label: "203", value: "203" },
-];
-
-const DATA1 = [
-  {
-    id: "1",
-    title: "Bảo vệ",
-    icon: "user-shield",
-    color: "#071D92",
-    name: "Room",
-  },
-  {
-    id: "2",
-    title: "Wifi",
-    icon: "wifi",
-    color: "#071D92",
-    name: "Tenant",
-  },
-  {
-    id: "3",
-    title: "Rác",
-    icon: "trash",
-    color: "#071D92",
-    name: "Finance",
-  },
-];
 
 const Services = ({ navigation }) => {
-  const { handleSubmit, control } = useForm();
-  const [roomOpen, setRoomOpen] = useState(false);
+  const [service, setService] = useState([]);
   const [roomValue, setRoomValue] = useState(null);
-  const [room, setRoom] = useState(rooms);
-  const onRoomOpen = useCallback(() => {
-  }, []);
+  const [roomlist, setRoomList] = useState([]);
+  const [room, setRoom] = useState(null);
+  // const fetchData = async () => {
+  //   const resp = await fetch("https://tintrott.cleverapps.io/api/service?id=1");
+  //   const data = await resp.json();
+  //   setService(data);
+  // };
+  const fetchService = async (roomid) => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/service?id="+roomid);
+    const data = await resp.json();
+    setService(data);
+  };
+  const fetchRoom = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/room/name?id=1");
+    const data = await resp.json();
+    setRoomList(data);
+  };
+  useEffect(() => {
+    fetchRoom();
+    console.log(service);
+  },[service]);
+
+  // const onRoomOpen = useCallback(() => {
+  // }, []);
+
   const Item = ({ item }) => (
     <Pressable
-      onPress={() => 
-        navigation.navigate(item.name)
-      }
       style={() => [
         {
           backgroundColor: "white",
@@ -70,8 +53,14 @@ const Services = ({ navigation }) => {
         },
       ]}
     >
-      <FontAwesome5 name={item.icon} size={45} color={item.color} />
-      <Text style={styles.item}>{item.title}</Text>
+    {item.name ==="Bảo vệ" ? 
+      <FontAwesome5 name="user-shield" size={45} color="#071D92" />:
+      item.name === "Wifi" ?
+        <FontAwesome5 name="wifi" size={45} color="#071D92" />:
+        <FontAwesome5 name="trash" size={45} color="#071D92" />
+      
+    }
+      <Text style={styles.item}>{item.name}</Text>
     </Pressable>
   );
 
@@ -113,7 +102,26 @@ const Services = ({ navigation }) => {
         <View style={styles.body}>
         
         <Text style={styles.header}>Xem dịch vụ</Text>
-        <Controller
+        <View style={styles.dropdownRoom}>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyles}
+          selectedTextStyle={styles.placeholderStyles}
+          data={roomlist}
+          maxHeight={300}
+          labelField="name"
+          valueField="id"
+          placeholder='Chọn phòng'
+          value={roomValue}
+          onChange ={(item) =>{
+            setRoomValue(item.id),
+            fetchService(item.id)
+          }
+          }
+        />
+        </View>
+
+        {/* <Controller
         name="room"
         defaultValue=""
         control={control}
@@ -134,12 +142,13 @@ const Services = ({ navigation }) => {
               zIndex={3000}
               zIndexInverse={1000}
             />
+            {console.log(room)}
           </View>
         )}
-      />
+      /> */}
         <View style={styles.menu}>
         <FlatList
-          data={DATA1}
+          data={service}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -258,8 +267,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   dropdown: {
+    marginHorizontal: 10,
+    backgroundColor: '#FFFFFF',
     zIndex: 10,
-    borderWidth: 0,
+    borderColor: '#660B8E',
+    borderWidth: 1,
     borderRadius: 16,
     shadowOffset: {
       width: 9,
@@ -268,6 +280,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6, 
     marginBottom: 20   
+  },
+  placeholderStyles: {
+    color: '#660B8E',
+    marginLeft: 10
   }
 });
 export default Services;

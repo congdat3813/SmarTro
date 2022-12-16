@@ -9,7 +9,7 @@ import {
   TextInput,
   ProgressViewIOSBase
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
@@ -58,7 +58,57 @@ const DATA2 = [
 
 const Posts = ({ navigation }) => {
   const [status, setStatus] = useState("Đã đăng");
-  const [posts, setPosts] = useState(DATA1);
+  const [posts, setPosts] = useState([]);
+  const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
+  const fetchData = async () => {
+    const resp1 = await fetch("https://tintrott.cleverapps.io/api/room/tus?id=1");
+    const data1 = await resp1.json();
+    setData1(data1);
+    setFilterNewData(data1);
+    setPosts(data1)
+    const resp2 = await fetch("https://tintrott.cleverapps.io/api/room/tus/no?id=1");
+    const data2 = await resp2.json();
+    setData2(data2);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+  const [filterdata, setFilterNewData] = useState();
+  const [searchQuery, setSearchQuery] = useState('');
+  const onChangeSearch = (query) => {
+    setSearchQuery(query);
+    if (query) {
+      const newData = posts.filter((item) => {
+        const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = query.toString().toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilterNewData(newData);      
+    }
+    else{
+      setFilterNewData(posts);
+    }
+  };
+
+  // const onChangeSearch2 = (query) => {
+  //   setSearchQuery(query);
+  //   if (query) {
+  //     const newData = posts.filter((item) => {
+  //       //const itemData = item.name? item.name.toUpperCase() : ''.toUpperCase();
+  //       const itemData = item.num.toString() ? item.num.toString().toUpperCase() : ''.toUpperCase();
+  //       const textData = query.toString().toUpperCase();
+  //       return itemData.indexOf(textData) > -1;
+  //     });
+  //     setFilterNewData(newData);
+  //     console.log('newData',filterdata);
+      
+  //   }
+  //   else{
+  //     setFilterNewData(posts);
+  //   }
+  // };
   const Post1 = ({ item }) => {
     return (
       <Pressable
@@ -69,11 +119,11 @@ const Posts = ({ navigation }) => {
       <Image
     style={styles.largeImage}
     source={{
-      uri: item.image,
+      uri: "https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg",
     }}
   />
       <View style={styles.title}>
-        <Text style={styles.id}>{item.title}</Text>
+        <Text style={styles.id}>{item.name}</Text>
         <Text style={styles.price}>{item.price}đ</Text>
       </View>  
       <View style={{flexDirection: 'row'}}>
@@ -83,7 +133,7 @@ const Posts = ({ navigation }) => {
           color="#F2BF00"
           style={{ marginRight: 15 }}
         />
-        <Text style={styles.info}>Phòng {item.number} người</Text>
+        <Text style={styles.info}>Phòng {item.num} người</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
       <FontAwesome5
@@ -92,7 +142,7 @@ const Posts = ({ navigation }) => {
           color="#660B8E"
           style={{ marginRight: 15 }}
         />
-      <Text style={styles.info}>{item.location}</Text>
+      <Text style={styles.address}>{item.address}</Text>
       </View>
       </Pressable>
     )};
@@ -109,6 +159,9 @@ const Posts = ({ navigation }) => {
     const Post2 = ({ item }) => {
       return (
         <Pressable
+        onPress={() =>
+          navigation.navigate('AddPost', {item})
+        }   
         style={({ pressed }) => [
           {
             backgroundColor: pressed ? "#F3E8FF" : "white",
@@ -138,11 +191,9 @@ const Posts = ({ navigation }) => {
       }}
     />  
     <View>
-  
-        <Text style={styles.id}>Phòng {item.room}</Text>
-        <Text style={styles.info}></Text>
+        <Text style={styles.id}>Phòng {item.name}</Text>
         <Text style={styles.info}>Giá phòng: {item.price}đ</Text>
-        <Text style={styles.info}>Khách thuê: {item.hired}/{item.number}</Text>
+        <Text style={styles.info}>Khách thuê: {item.num}</Text>
         </View>
       </Pressable>
       )};
@@ -180,21 +231,9 @@ const Posts = ({ navigation }) => {
         
                 <TextInput
         style={styles.input}
-        // onChangeText={onChangeText}
-        value=""
+        onChangeText={onChangeSearch}
+        value={{searchQuery}}
       ></TextInput>
-      <Pressable
-      onPress={() => 
-        navigation.navigate('Home')
-      }
-      >
-                  <FontAwesome5
-              name="sliders-h"
-              size={30}
-              color="#660B8E"
-              style={{ marginLeft: 15, borderWidth: 2, borderColor: '#660B8E', borderRadius: 10, padding: 8, }}
-            />
-      </Pressable>
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
 
@@ -202,7 +241,8 @@ const Posts = ({ navigation }) => {
       <Pressable
   onPress={() => {
     setStatus("Đã đăng");
-    setPosts(DATA1);
+    setPosts(data1);
+    setFilterNewData(data1);
   }}
   style={(status == "Đã đăng")? styles.violetButton : styles.violetButtonOutline}>
   <Text style={(status == "Đã đăng")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#660B8E", fontSize: 15, fontWeight: 'bold'}}>Đã đăng</Text>
@@ -210,20 +250,19 @@ const Posts = ({ navigation }) => {
 <Pressable
   onPress={() => {
     setStatus("Chưa đăng");
-    setPosts(DATA2);
+    setPosts(data2);
+    setFilterNewData(data2);
   }}
   style={(status == "Chưa đăng")? styles.yellowButton : styles.yellowButtonOutline}>
   <Text style={(status == "Chưa đăng")? {color: 'black', fontSize: 15, fontWeight: 'bold'} : {color: "#F2BF00", fontSize: 15, fontWeight: 'bold'}}>Chưa đăng</Text>
 </Pressable>
 </View>
-
         <FlatList
-          data={posts}
+          data={filterdata}
           renderItem={status == "Đã đăng"? renderPost1 : renderPost2}
           keyExtractor={(item) => item.id}
           style={styles.list}
         />   
-
         </View>
       </LinearGradient>
     </View>
@@ -406,7 +445,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    width: 305,
+    width: '90%',
     backgroundColor: 'white',
     borderRadius: 12,
     shadowOffset: {
@@ -420,6 +459,14 @@ const styles = StyleSheet.create({
   searchIcon: {
     position: 'absolute',
     left: 20
+},
+address: {
+  fontSize: 15,
+  // fontWeight: 'bold',
+  // marginBottom: 5,
+  marginRight: 10,
+  width: 310,
+  height: 20
 },
 });
 export default Posts;

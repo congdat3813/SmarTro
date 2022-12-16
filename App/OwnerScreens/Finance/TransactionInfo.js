@@ -1,14 +1,25 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const TransactionInfo = ({ navigation, route: { params } }) => {
-  const {item, fromFinance} = params;
-  const backPage = fromFinance? 'Finance' : 'Transactions';
+  const [item, setItem] = useState({});
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/revenue/all/1");
+    const data = await resp.json();
+    setItem(data);
+    setFilterNewData(data);
+  };
+  useEffect(() => {
+    fetchData();
+  },[]);
+
+  // const {item, fromFinance} = params;
+  // const backPage = fromFinance? 'Finance' : 'Transactions';
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -19,7 +30,7 @@ const TransactionInfo = ({ navigation, route: { params } }) => {
           <View style={styles.headerBarTitle}>
           <Pressable
       onPress={() => 
-        navigation.navigate(backPage)
+        navigation.pop()
       }
     >
       <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
@@ -30,7 +41,7 @@ const TransactionInfo = ({ navigation, route: { params } }) => {
         <View style={styles.body}>
 
         <View style={styles.infoTag}>
-        <Text style={styles.id}>#{item.id}</Text>
+        <Text style={styles.id}>{item.code}</Text>
         <View style={styles.title}>
             <Text style={styles.detailInfo}>Phòng</Text>
             <Text style={styles.price}>{item.room}</Text>
@@ -47,7 +58,7 @@ const TransactionInfo = ({ navigation, route: { params } }) => {
 
           <View style={styles.title}>
             <Text style={styles.detailInfo}>Tổng cộng</Text>
-            <Text style={styles.price}>{item.value}đ</Text>
+            <Text style={styles.price}>{item.price}đ</Text>
           </View>
 
           <View style={styles.title}>
@@ -63,10 +74,6 @@ const TransactionInfo = ({ navigation, route: { params } }) => {
         // onChangeText={onChangeText}
         value=""
       ></TextInput>
-
-        <Pressable style={styles.button}>
-          <Text style={{color: 'white', fontSize: 16,  fontWeight: 'bold'}}>Xóa</Text>
-        </Pressable>
 
         </View>
 
