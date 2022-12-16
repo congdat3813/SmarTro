@@ -119,7 +119,7 @@ const Posts = ({ navigation }) => {
       <Image
     style={styles.largeImage}
     source={{
-      uri: item.image,
+      uri: "https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg",
     }}
   />
       <View style={styles.title}>
@@ -142,7 +142,7 @@ const Posts = ({ navigation }) => {
           color="#660B8E"
           style={{ marginRight: 15 }}
         />
-      <Text style={styles.info}>{item.address}</Text>
+      <Text style={styles.address}>{item.address}</Text>
       </View>
       </Pressable>
     )};
@@ -459,6 +459,14 @@ const styles = StyleSheet.create({
   searchIcon: {
     position: 'absolute',
     left: 20
+},
+address: {
+  fontSize: 15,
+  // fontWeight: 'bold',
+  // marginBottom: 5,
+  marginRight: 10,
+  width: 310,
+  height: 20
 },
 });
 export default Posts;

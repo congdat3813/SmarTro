@@ -23,6 +23,7 @@ const TroubleInfo = ({ navigation, route: { params } }) => {
     const resp = await fetch("https://tintrott.cleverapps.io/api/incident/" + params.item.id);
     const data = await resp.json();
     setItem(data);
+    setContent(data.status == "Đang đợi xử lý"? processingBtn : (data.status == "Đang xử lý"? processedBtn : null));
     setFilterNewData(data);
   };
   useEffect(() => {

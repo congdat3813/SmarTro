@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image, Alert, TextInput } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, Fragment } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { NavigationContainer } from '@react-navigation/native';
@@ -11,6 +11,9 @@ import SwipeableModal from "./SwipeableModal";
 import * as ImagePicker from 'expo-image-picker';
 import Button from "./Button";
 import ImageViewer from "./ImageViewer";
+import Modal from "react-native-modal";
+
+// const PlaceholderImage = require('../../../assets/logo.png');
 
 const rooms = [
   { label: "101", value: "101" },
@@ -22,6 +25,62 @@ const rooms = [
 ];
 
 const AddTrouble = ({ navigation }) => {
+
+  const postData = async (url, data) => {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  };
+
+
+  const SwipeableModal = () => {
+
+    // onSubmit = () => alert(this.state.data);
+    const [visible, setVisible] = useState(false);
+  
+      return (
+        <Fragment>
+          <Modal
+            isVisible={visible}
+            backdropOpacity={0.3}
+            swipeDirection="left"
+            onSwipeComplete={()=>setVisible(false)}
+            onBackdropPress={()=>setVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalDescription}>
+              Bạn có chắc muốn báo cáo sự cố?
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+              <Pressable
+                onPress={()=>setVisible(false)}
+              >
+                
+                  <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Đồng ý</Text>
+                  
+              </Pressable>
+              <Pressable
+                onPress={()=>setVisible(false)}
+              >
+                
+                  <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Hủy</Text>
+                  
+              </Pressable>
+              </View>
+            </View>
+          </Modal>
+  
+          <Pressable
+          onPress={()=> {setVisible(true);}}
+          style={styles.modalButton}>
+            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Thêm</Text>
+          </Pressable>
+        </Fragment>
+      );
+  }
+
   const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImageAsync = async () => {
@@ -38,6 +97,20 @@ const AddTrouble = ({ navigation }) => {
   };
 
   const PlaceholderImage = require('../../../assets/logo.png');
+
+  const [image, setImage] = useState();
+
+  const pickImage = async () => {
+    
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if(permission.granted !== true){
+      return;
+    }
+    
+    const result = await ImagePicker.launchCameraAsync();
+    setImage(result.uri);
+
+  };
 
   const { handleSubmit, control } = useForm();
   const [genderOpen, setGenderOpen] = useState(false);
@@ -141,13 +214,18 @@ const AddTrouble = ({ navigation }) => {
       />
 
 <Text style={styles.header}>Hình ảnh</Text>
-{/* <View style={styles.imagePicker}>
+<View style={styles.imagePicker}>
 <View style={styles.imageContainer}>
         <ImageViewer placeholderImageSource={PlaceholderImage} selectedImage={selectedImage} />
       </View>
       <View style={styles.footerContainer}>
         <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
       </View>
+    </View>
+
+{/* <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Button title="Capture photo" onPress={pickImage} />
+      {image !== undefined ? <Image source={{ uri: image }} style={{ width: 200, height: 200 }} /> : null}
     </View> */}
 
         <SwipeableModal />
@@ -406,6 +484,29 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 1 / 3,
     alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: "center",
+    backgroundColor: "white",
+    borderRadius: 16,
+    // borderColor: "#C0C0C0",
+    // borderWidth: 2,
+    marginVertical: 350
+  },
+  modalDescription: {
+    // padding: 20,
+    fontSize: 20,
+    marginBottom: 20
+  },
+  modalButton: {
+    width: 370,
+    height: 50,
+    backgroundColor: "#BD0000",
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });
 export default AddTrouble;

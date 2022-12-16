@@ -85,7 +85,7 @@ const TroubleInfo = ({ navigation, route: { params } }) => {
         <Image
         style={styles.largeImage}
         source={{
-          uri: item.image,
+          uri: "https://i.pinimg.com/564x/77/08/bd/7708bde01eb3bfcf8a0d29b19caddb60.jpg",
         }}
       />  
         {/* <Pressable style={styles.button}>

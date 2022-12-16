@@ -11,6 +11,7 @@ import {
 import Toast from 'react-native-toast-message';
 
 export default function Login({navigation}) {
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   const [userName, setUserName] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,38 +20,51 @@ export default function Login({navigation}) {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = usePasswordVisibility();
   const [curUser, setCurUser] = useState([]);
-  // const showToast = message => {
-  //   Toast.show({
-  //     type: 'success',
-  //     text1: message,
-  //   });
-  // };
+  const showToast = (message) => {
+    Toast.show({
+      type: 'success',
+      text1: message,
+    });
+  };
   const fetchLogin = async () =>{
+    var data;
     try{
     const resp =  await fetch('https://tintrott.cleverapps.io/api/user/login', {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
         'username': userName,
         'password': userPassword,
       },
-    });
-    const data = await resp.json();
+    })
+    data = await resp.json();
     console.log(data);
     setCurUser(data);
     }
     catch (error) {
-      console.error(error);
+    }
+    finally{
+      if(data.id != 0) {
+        console.log(data.type)
+        if(data.type){
+          navigation.replace('ORoot');
+        }
+        else{
+          navigation.replace('CRoot');
+        }
+        
+      }
     }
   }
   // const loginProcess=() =>{
-  //   if(curUser!= null) {
-  //     showToast('Đăng nhập thành công');
-  //     navigation.navigate('Home');
-  //   }
-  //   else{
-  //     showToast('Tên đăng nhập hoặc  mật khẩu không đúng');
+  //   if(curUser.id != 0) {
+  //     console.log(curUser.type)
+  //     if(curUser.type){
+  //       navigation.replace('ORoot');
+  //     }
+  //     else{
+  //       navigation.replace('CRoot');
+  //     }
+      
   //   }
   // }
   // const handleSubmitPress = () => {
@@ -141,7 +155,6 @@ export default function Login({navigation}) {
               <MaterialCommunityIcons name={rightIcon} size={22} color="#232323" />
             </Pressable>
           </View>
-          {curUser? <Text styles={{color:'red'}}>Sai mật khẩu</Text>:<></> }
         </View>
         <View style={styles.guide}>
           <View style={styles.remeberAccount}>
@@ -159,9 +172,8 @@ export default function Login({navigation}) {
             Quên mật khẩu ?
           </Link>
         </View>
-        <Pressable style={styles.button} onPress={() => {
+        <Pressable style={styles.button} onPress={async () => {
           fetchLogin();
-          navigation.navigate('Home');
           }
           }>
           <Text style={styles.textBut}>Đăng nhập</Text>

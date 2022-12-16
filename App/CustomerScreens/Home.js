@@ -1,11 +1,29 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, Pressable, StyleSheet, Text, View, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Modal from "react-native-modal";
+
+const DATA = [
+  {
+    id: "7",
+    title: "Tìm phòng",
+    icon: "search",
+    color: "#F08672",
+    name: "Posts",
+  },
+  {
+    id: "5",
+    title: "Phòng đã lưu",
+    icon: "bookmark",
+    color: "#F08672",
+    name: "SavedPosts",
+  },
+];
 
 const DATA1 = [
   {
@@ -16,22 +34,29 @@ const DATA1 = [
     name: "RoomInfo",
   },
   {
+    id: "6",
+    title: " Thông tin \n   cá nhân",
+    icon: "user-alt",
+    color: "#F2BF00",
+    name: "ProfileInfo",
+  },
+  {
     id: "2",
     title: "Hóa đơn",
     icon: "money-bill-wave",
     color: "#0BA108",
     name: "Bills",
   },
+];
+
+const DATA2 = [
   {
     id: "3",
     title: "Dịch vụ",
     icon: "cogs",
     color: "#071D92",
     name: "Services",
-  }
-];
-
-const DATA2 = [
+  },
   {
     id: "4",
     title: "Sự cố",
@@ -39,23 +64,60 @@ const DATA2 = [
     color: "#BD0000",
     name: "Troubles",
   },
-  {
-    id: "5",
-    title: "Phòng đã lưu",
-    icon: "bookmark",
-    color: "#F2BF00",
-    name: "SavedPosts",
-  },
-  {
-    id: "6",
-    title: "  Thông tin \n khách thuê",
-    icon: "user-friends",
-    color: "#F2BF00",
-    name: "ProfileInfo",
-  },
+
 ];
 
 const Home = ({ navigation }) => {
+  const SwipeableModal = () => {
+
+    // onSubmit = () => alert(this.state.data);
+    const [visible, setVisible] = useState(false);
+  
+      return (
+        <Fragment>
+          <Modal
+            isVisible={visible}
+            backdropOpacity={0.3}
+            swipeDirection="left"
+            onSwipeComplete={()=>setVisible(false)}
+            onBackdropPress={()=>setVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalDescription}>
+              Bạn có chắc muốn đăng xuất?
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+              <Pressable
+                onPress={()=>{
+                  setVisible(false);
+                  navigation.navigate('Login');
+                }}
+              >
+                
+                  <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Đồng ý</Text>
+                  
+              </Pressable>
+              <Pressable
+                onPress={()=>setVisible(false)}
+              >
+                
+                  <Text style={{color: '#660B8E', fontSize: 20, fontWeight: 'bold', marginHorizontal: 60}}>Hủy</Text>
+                  
+              </Pressable>
+              </View>
+            </View>
+          </Modal>
+  
+          <Pressable
+          onPress={()=> {setVisible(true); }}
+          >
+                      <FontAwesome5 name='sign-out-alt' size={30} color='black' style={{marginRight: 15}}/>
+          </Pressable>
+        </Fragment>
+      );
+  }
+
+
   const Item = ({ item }) => (
     <Pressable
       onPress={() => 
@@ -99,7 +161,8 @@ const Home = ({ navigation }) => {
       >
                 <View style={styles.headerBar}>
           <View style={styles.headerBarTitle}>
-          <FontAwesome5 name='chevron-left' size={30} color='black' style={{marginLeft: 15}}/>
+            <View></View>
+          <SwipeableModal />
           </View>
           <View style={{flexDirection: 'row', position: 'absolute', alignSelf: 'center', top: 42, marginBottom: 10, alignItems: 'center'}}>
           <Image
@@ -111,10 +174,20 @@ const Home = ({ navigation }) => {
         </View>
         
         <View style={styles.body}>
-        <Text style={styles.header}>Nhắc nhở</Text>
+        {/* <Text style={styles.header}>Nhắc nhở</Text> */}
         <Text style={styles.header}>Khởi tạo</Text>
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={styles.list}
+          horizontal
+          ItemSeparatorComponent={() => (
+            <View style={{ width: 12, backgroundColor: "transparent" }} />
+          )}
+        />
 
-        <Pressable
+        {/* <Pressable
     onPress={() => {
       navigation.navigate('Posts')
     }}
@@ -139,7 +212,7 @@ const Home = ({ navigation }) => {
   >
     <FontAwesome5 name="search" size={45} color="#F08672" />
     <Text style={styles.item}>Tìm phòng</Text>
-  </Pressable>
+  </Pressable> */}
         
         <Text style={styles.header}>Quản lý</Text>
         <View style={styles.menu}>
@@ -198,6 +271,7 @@ const styles = StyleSheet.create({
   },
   headerBarTitle: {
     alignItems: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     // position: 'absolute',
     marginBottom: 10,
@@ -263,6 +337,21 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 10,
     marginRight: 5
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: "center",
+    backgroundColor: "white",
+    borderRadius: 16,
+    // borderColor: "#C0C0C0",
+    // borderWidth: 2,
+    marginVertical: 350
+  },
+  modalDescription: {
+    // padding: 20,
+    fontSize: 20,
+    marginBottom: 20
   },
 });
 export default Home;

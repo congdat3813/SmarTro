@@ -16,30 +16,57 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import moment from 'moment';
 
 const RoomInfo = ({ navigation, route: { params } }) => {
-  // const params;
   const [item, setItem] = useState({});
-
+  const fetchData = async () => {
+    const resp = await fetch("https://tintrott.cleverapps.io/api/room/" + params.item.id);
+    const data = await resp.json();
+    setContent(
+      <View>
+      <View style={styles.infoTag}>
+              <View style={styles.title}>
+                  <Text style={styles.detailInfo}>Phòng</Text>
+                  <Text style={styles.price}>{data.name}</Text>
+                </View>
+                <View style={styles.title}>
+                  <Text style={styles.detailInfo}>Diện tích</Text>
+                  <Text style={styles.price}>{data.area}m2</Text>
+                </View>
+                <View style={styles.title}>
+                  <Text style={styles.detailInfo}>Giá</Text>
+                  <Text style={styles.price}>{data.price}đ</Text>
+                </View>
+                <View style={styles.title}>
+                  <Text style={styles.detailInfo}>Khách thuê</Text>
+                  <Text style={styles.price}>{data.numRents}/{data.numberOfTenants}</Text>
+                </View>
+                <View style={styles.title}>
+                  <Text style={styles.detailInfo}>Thuê từ</Text>
+                  <Text style={styles.price}>{moment(data.rentFrom).format('DD/MM/YYYY')}</Text>
+                </View>
+                <View style={styles.title}>
+                  <Text style={styles.detailInfo}>Đối tượng</Text>
+                  <Text style={styles.price}>{data.sex}</Text>
+                </View>
+      
+              </View>
+            
+                <Text style={styles.header}>Dịch vụ</Text>
+      
+                <View style={styles.descriptionTag}>
+                <FlatList
+                data={data.serviceIList}
+                renderItem={renderService}
+                // keyExtractor={(item) => item.id}
+                style={{}}
+              />
+                </View>
+                </View>
+    );
+    setItem(data);
+  };
   useEffect(() => {
-    // const data=fetchData();
-    // console.log(data);
-    // setItem(data);
-    const fetchData = async () => {
-      // console.log("ITEM ID:", params.item.id)
-      const resp = await fetch("https://tintrott.cleverapps.io/api/room/" + params.item.id);
-      const data = await resp.json();
-      console.log(data);
-      setItem(data);
-      console.log(item);
-      // console.log(data);
-      // console.log(item);
-      // return data;
-      // setFilterNewData(data);
-    };
     fetchData();
-    // console.log(item);
   },{});
-
-  console.log(item);
 
   const [data, setData] = useState([]);
   const fetchData1 = async () => {
