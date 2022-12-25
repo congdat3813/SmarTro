@@ -187,7 +187,7 @@ const Posts = ({ navigation }) => {
       <Image
       style={styles.smallImage}
       source={{
-        uri: item.image,
+        uri: 'https://i.pinimg.com/originals/4a/1b/0d/4a1b0d2f3b0dc3479ac684a6ba458d34.jpg',
       }}
     />  
     <View>

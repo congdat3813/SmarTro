@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { FlatList, Pressable, StyleSheet, Text, View, TextInput } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View, TextInput, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -52,8 +52,7 @@ const Bills = ({ navigation }) => {
     fetchData();
   },[]);
 
-  const [status, setStatus] = useState("Chưa thanh toán");
-  const [statusColor, setStatusColor] = useState("#F2BF00");
+  const [status, setStatus] = useState("Tất cả");
 
   const [filterdata, setFilterNewData] = useState();
   const [searchQuery, setSearchQuery] = useState('');
@@ -107,7 +106,7 @@ const Bills = ({ navigation }) => {
     fontStyle: "italic",
     fontWeight: 'bold',
     // marginBottom: 5,
-    color: statusColor
+    color: item.status == "Chưa thanh toán"? '#F2BF00' : (item.status == "Đã thanh toán"? "#071D92" : "#BD0000")
   }}>{item.status}</Text>
     </View>
     <View style={styles.title}>
@@ -115,7 +114,7 @@ const Bills = ({ navigation }) => {
     <Text style={styles.price}>{item.price}đ</Text>
     </View>
     <Text style={styles.info}>Loại: {item.type}</Text>
-    <Text style={styles.info}>Hạn thanh toán: {moment(item.startTime).format('DD/MM/YYYY')} - {moment(item.endTime).format('DD/MM/YYYY')}</Text>
+    <Text style={styles.info}>Hạn thanh toán: {moment(item.endTime).format('DD/MM/YYYY')}</Text>
   </Pressable>
     );
 
@@ -159,11 +158,19 @@ const renderBill = ({ item }) => {
         </View>
 
       <View style={styles.buttons}>
-
+      <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}>
+      <Pressable
+          onPress={() => {
+            setStatus("Tất cả");
+          }}
+          style={(status == "Tất cả")? styles.blackButton : styles.blackButtonOutline}>
+          <Text style={(status == "Tất cả")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "black", fontSize: 15, fontWeight: 'bold'}}>Tất cả</Text>
+        </Pressable>  
 <Pressable
   onPress={() => {
     setStatus("Chưa thanh toán");
-    setStatusColor("#F2BF00");
     setData(datastart.filter(item => item.status == "Chưa thanh toán"));
     setFilterNewData(datastart.filter(item => item.status == "Chưa thanh toán"));
   }}
@@ -173,7 +180,6 @@ const renderBill = ({ item }) => {
 <Pressable
   onPress={() => {
     setStatus("Đã thanh toán");
-    setStatusColor("#071D92");
     setData(datastart.filter(item => item.status == "Đã thanh toán"));
     setFilterNewData(datastart.filter(item => item.status == "Đã thanh toán"));
     console.log(filterdata);
@@ -184,13 +190,13 @@ const renderBill = ({ item }) => {
 <Pressable
   onPress={() => {
     setStatus("Trễ hạn");
-    setStatusColor("#BD0000");
     setData(datastart.filter(item => item.status == "Trễ hạn"));
     setFilterNewData(datastart.filter(item => item.status == "Trễ hạn"));
   }}
   style={(status == "Trễ hạn")? styles.redButton : styles.redButtonOutline}>
   <Text style={(status == "Trễ hạn")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#BD0000", fontSize: 15, fontWeight: 'bold'}}>Trễ hạn</Text>
 </Pressable>
+</ScrollView>
 </View>
 
       {/* <View style={styles.buttons}>
@@ -220,7 +226,7 @@ const renderBill = ({ item }) => {
 </View> */}
 
 <FlatList
-          data={filterdata}
+          data={status=="Tất cả"? datastart:filterdata}
           renderItem={renderBill}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -434,6 +440,26 @@ const styles = StyleSheet.create({
   searchIcon: {
     position: 'absolute',
     left: 20
+},
+blackButton: {
+  width: 135,
+  height: 40,
+  backgroundColor: "black",
+  borderRadius: 12,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 15
+},
+blackButtonOutline: {
+  width: 135,
+  height: 40,
+  backgroundColor: "white",
+  borderWidth: 2,
+  borderRadius: 12,
+  borderColor: "black",
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 15
 },
 });
 export default Bills;

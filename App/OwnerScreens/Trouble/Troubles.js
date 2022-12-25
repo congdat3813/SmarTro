@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { FlatList, Pressable, StyleSheet, Text, View, Image, Button, Alert, TextInput } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View, Image, ScrollView, Button, Alert, TextInput } from "react-native";
 import React, { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -38,8 +38,7 @@ const Troubles = ({ navigation }) => {
   },[]);
 
 
-  const [status, setStatus] = useState("Đang đợi xử lý");
-  const [statusColor, setStatusColor] = useState("#F2BF00");
+  const [status, setStatus] = useState("Tất cả");
   const Trouble = ({ item }) => {
     return (
       <Pressable
@@ -84,7 +83,7 @@ const Troubles = ({ navigation }) => {
     fontStyle: "italic",
     fontWeight: 'bold',
     marginBottom: 5,
-    color: statusColor
+    color: item.status == "Đang đợi xử lý"? '#F2BF00' : (item.status == "Đang xử lý"? "#071D92" : "#0BA108")
   }}>{item.status}</Text>
     </View>
       <Text style={styles.info}>Phòng: {item.room}</Text>
@@ -139,11 +138,19 @@ const Troubles = ({ navigation }) => {
             <FontAwesome5 style={styles.searchIcon} name="search" size={20} color="#CCCCCC"/>
       </View>
         <View style={styles.buttons}>
-
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}>
+        <Pressable
+          onPress={() => {
+            setStatus("Tất cả");
+          }}
+          style={(status == "Tất cả")? styles.blackButton : styles.blackButtonOutline}>
+          <Text style={(status == "Tất cả")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "black", fontSize: 15, fontWeight: 'bold'}}>Tất cả</Text>
+        </Pressable> 
         <Pressable
           onPress={() => {
             setStatus("Đang đợi xử lý");
-            setStatusColor("#F2BF00");
             setData(datastart.filter(item => item.status == "Đang đợi xử lý"));
             setFilterNewData(datastart.filter(item => item.status == "Đang đợi xử lý"));
           }}
@@ -153,7 +160,6 @@ const Troubles = ({ navigation }) => {
         <Pressable
           onPress={() => {
             setStatus("Đang xử lý");
-            setStatusColor("#071D92");
             setData(datastart.filter(item => item.status == "Đang xử lý"));
             setFilterNewData(datastart.filter(item => item.status == "Đang xử lý"));
           }}
@@ -163,17 +169,17 @@ const Troubles = ({ navigation }) => {
         <Pressable
           onPress={() => {
             setStatus("Đã xử lý");
-            setStatusColor("#0BA108");
             setData(datastart.filter(item => item.status == "Đã xử lý"));
             setFilterNewData(datastart.filter(item => item.status == "Đã xử lý"));
           }}
           style={(status == "Đã xử lý")? styles.greenButton : styles.greenButtonOutline}>
           <Text style={(status == "Đã xử lý")? {color: 'white', fontSize: 15, fontWeight: 'bold'} : {color: "#0BA108", fontSize: 15, fontWeight: 'bold'}}>Đã xử lý</Text>
         </Pressable>
+        </ScrollView>
         </View>
 
         <FlatList
-          data={filterdata}
+          data={status == "Tất cả"? datastart: filterdata}
           renderItem={renderTrouble}
           keyExtractor={(item) => item.id}
           style={styles.list}
@@ -414,6 +420,26 @@ const styles = StyleSheet.create({
   searchIcon: {
     position: 'absolute',
     left: 20
+},
+blackButton: {
+  width: 135,
+  height: 40,
+  backgroundColor: "black",
+  borderRadius: 12,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 15
+},
+blackButtonOutline: {
+  width: 135,
+  height: 40,
+  backgroundColor: "white",
+  borderWidth: 2,
+  borderRadius: 12,
+  borderColor: "black",
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 15
 },
 });
 export default Troubles;
