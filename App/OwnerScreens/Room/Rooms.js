@@ -7,7 +7,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
-import { Searchbar } from 'react-native-paper';
 
 
 const Rooms = ({ navigation }) => {
